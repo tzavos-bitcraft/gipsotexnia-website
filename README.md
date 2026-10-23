@@ -64,8 +64,9 @@ built from these values. The prefilled WhatsApp messages (Greek/English) are in 
 Legal details (name, ΑΦΜ, ΔΟΥ, address) are in `legal` in the same file. They're shown in the
 footer and in the structured data.
 
-Business facts: `areaServed` ("Σε όλη την Αττική"; Google gets Αθήνα + Αττική) and `replyTime`
-("Άμεση απάντηση") are set. `hours`, `yearsExperience` and `projectsCompleted` stay `null` until the client confirms them. While `null`, the site shows a ⟦placeholder⟧ and leaves
+Business facts: `hours` (Δευ–Σάβ 08:00–20:00), `areaServed` ("Σε όλη την Αττική"; Google gets Αθήνα + Αττική) and `replyTime`
+("Άμεση απάντηση") are set. `yearsExperience` and `projectsCompleted` stay `null` until the client answers; the trust strip shows
+TikTok/Instagram follower counts (`social.followers`, update them now and then) and adds years/projects once set. While `null`, the site shows a ⟦placeholder⟧ and leaves
 the fact out of the structured data. Fill one in, for example `yearsExperience: 12`, and it appears everywhere.
 
 Where the other text lives:
@@ -212,26 +213,26 @@ Visible on the site as yellow ⟦ΣΥΜΠΛΗΡΩΣΗ⟧ / ⟦TO CONFIRM⟧ boxe
 | # | Item | Where |
 | --- | --- | --- |
 | 1 | Final domain (gipsotexnia.gr is taken) | Vercel settings + `SITE_URL` (`astro.config.mjs`) |
-| 2 | Business hours | `src/config/site.ts` → `hours` |
-| 3 | Years in business | `src/config/site.ts` → `yearsExperience` |
-| 4 | Number of completed projects | `src/config/site.ts` → `projectsCompleted` |
-| 5 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
-| 6 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
-| 7 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
-| 8 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
-| 9 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
-| 10 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
-| 11 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
-| 12 | Opt-in for Google Analytics; approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
-| 13 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
+| 2 | Years in business (optional; appears in the trust strip once set) | `src/config/site.ts` → `yearsExperience` |
+| 3 | Number of completed projects (optional; same) | `src/config/site.ts` → `projectsCompleted` |
+| 4 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
+| 5 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
+| 6 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
+| 7 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
+| 8 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
+| 9 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
+| 10 | Opt-in for Google Analytics; approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
+| 11 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
 
 ### Not needed (removed from the client checklist)
 
 Phone check (calls/WhatsApp/Viber) · confirming the «Άμεση απάντηση» line · whether the Kaisariani
 address is public (it stays in the footer as legal info) · clean-work / on-time claims (kept on the site)
 · materials, certifications, warranty, languages · who does the lighting electrics · work outside shop
-hours · how often they post · team/owner photo · which Gmail gets GA access. Don't re-add these
-to the site as ⟦placeholders⟧.
+hours · how often they post · team/owner photo · which Gmail gets GA access. Also decided: no contact form; Gmail address stays for now; only Attica (no jobs outside); free
+site visit across Attica; first estimate from a photo on WhatsApp/Viber; payment by cash, card or bank
+transfer; Instagram auto-feed is fine; featured TikToks stay the current 3; domain to be registered in
+the company's name. Don't re-add these to the site as ⟦placeholders⟧.
 
 ---
 

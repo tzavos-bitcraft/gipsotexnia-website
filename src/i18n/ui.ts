@@ -2,7 +2,7 @@
 // Greek is written for a Greek audience, not translated word-for-word.
 // Unconfirmed facts are written as ⟦…⟧ placeholders (see ./todo.ts) and come from
 // src/config/site.ts once the client fills them in.
-import { business } from '../config/site';
+import { business, social } from '../config/site';
 import { todo } from './todo';
 import type { Lang } from './routes';
 
@@ -79,7 +79,7 @@ const el = {
     callLong: 'Τηλεφωνήστε μας',
     reassure: 'Στείλτε μας μήνυμα, απαντάμε γρήγορα',
     reassureSub: `Δωρεάν προσφορά · Χωρίς υποχρέωση · ${reply.el}`,
-    photoTip: 'Tip: στείλτε μας μια φωτογραφία του χώρου, βοηθάει να σας απαντήσουμε πιο γρήγορα.',
+    photoTip: 'Tip: στείλτε μας μια φωτογραφία του χώρου και παίρνετε αμέσως μια πρώτη εκτίμηση.',
     floatingOpen: 'Επικοινωνία',
     floatingTitle: 'Μιλήστε μαζί μας',
     floatingSub: 'Διαλέξτε όπως σας βολεύει, απαντάμε γρήγορα.',
@@ -96,10 +96,13 @@ const el = {
     imageAlt: 'Σύνθεση τοίχου από γυψοσανίδα με θέση για τηλεόραση, ράφια και ζεστό κρυφό φωτισμό LED',
   },
 
+  // Years / projects appear here automatically once set in src/config/site.ts.
   trust: [
-    { value: yearsV.el, label: 'χρόνια εμπειρίας' },
-    { value: projectsV.el, label: 'ολοκληρωμένα έργα' },
-    { value: 'Δωρεάν', label: 'προσφορά, χωρίς υποχρέωση' },
+    ...(years ? [{ value: yearsV.el, label: 'χρόνια εμπειρίας' }] : []),
+    ...(projects ? [{ value: projectsV.el, label: 'ολοκληρωμένα έργα' }] : []),
+    { value: social.followers.tiktok, label: 'ακόλουθοι στο TikTok' },
+    { value: social.followers.instagram, label: 'ακόλουθοι στο Instagram' },
+    { value: 'Δωρεάν', label: 'αυτοψία και προσφορά' },
     { value: area.el, label: 'περιοχές που εξυπηρετούμε' },
   ],
 
@@ -172,8 +175,8 @@ const el = {
     title: 'Πώς δουλεύουμε',
     lead: 'Απλά, χωρίς γραφειοκρατία.',
     items: [
-      { title: 'Στείλτε μήνυμα', text: 'Σε WhatsApp ή Viber, με λίγα λόγια και, αν θέλετε, μια φωτογραφία του χώρου.' },
-      { title: 'Τα λέμε από κοντά', text: 'Συζητάμε την ιδέα σας και παίρνουμε μέτρα.' },
+      { title: 'Στείλτε μήνυμα', text: 'Σε WhatsApp ή Viber, με λίγα λόγια και μια φωτογραφία του χώρου. Παίρνετε μια πρώτη εκτίμηση.' },
+      { title: 'Δωρεάν αυτοψία', text: 'Ερχόμαστε στον χώρο σας, οπουδήποτε στην Αττική, συζητάμε την ιδέα σας και παίρνουμε μέτρα.' },
       { title: 'Παίρνετε προσφορά', text: 'Δωρεάν και χωρίς υποχρέωση. Αποφασίζετε με την ησυχία σας.' },
       { title: 'Φτιάχνουμε & παραδίδουμε', text: 'Κατασκευάζουμε, τοποθετούμε και παραδίδουμε έτοιμο για βάψιμο ή βαμμένο, όπως προτιμάτε.' },
     ],
@@ -190,7 +193,7 @@ const el = {
     items: [
       {
         q: 'Πόσο κοστίζει μια κατασκευή με γυψοσανίδα;',
-        a: `Εξαρτάται από το μέγεθος, το σχέδιο και τον φωτισμό. Στείλτε μας μια φωτογραφία και περίπου διαστάσεις για μια πρώτη εκτίμηση. Η προσφορά είναι δωρεάν. ${todo('ΣΥΜΠΛΗΡΩΣΗ: ενδεικτικές τιμές')}`,
+        a: `Εξαρτάται από το μέγεθος, το σχέδιο και τον φωτισμό. Στείλτε μας μια φωτογραφία και περίπου διαστάσεις για μια πρώτη εκτίμηση. Η αυτοψία και η προσφορά είναι δωρεάν. ${todo('ΣΥΜΠΛΗΡΩΣΗ: ενδεικτικές τιμές')}`,
       },
       {
         q: 'Πόσες μέρες κρατάει η δουλειά;',
@@ -206,7 +209,11 @@ const el = {
       },
       {
         q: 'Σε ποιες περιοχές δουλεύετε;',
-        a: `${area.el}. Αν είστε αλλού, στείλτε μας μήνυμα και θα το δούμε.`,
+        a: `${area.el}. Η αυτοψία είναι δωρεάν σε όλη την Αττική.`,
+      },
+      {
+        q: 'Πώς μπορώ να πληρώσω;',
+        a: 'Με μετρητά, κάρτα ή τραπεζική μεταφορά.',
       },
     ],
   },
@@ -321,7 +328,7 @@ const en: Dict = {
     callLong: 'Give us a call',
     reassure: 'Send us a message, we reply fast',
     reassureSub: `Free quote · No obligation · ${reply.en}`,
-    photoTip: 'Tip: send us a photo of the space, it helps us reply faster.',
+    photoTip: 'Tip: send us a photo of the space and get a first estimate straight away.',
     floatingOpen: 'Contact',
     floatingTitle: 'Talk to us',
     floatingSub: 'Pick whatever suits you, we reply fast.',
@@ -339,9 +346,11 @@ const en: Dict = {
   },
 
   trust: [
-    { value: yearsV.en, label: 'years of experience' },
-    { value: projectsV.en, label: 'projects completed' },
-    { value: 'Free', label: 'quote, no obligation' },
+    ...(years ? [{ value: yearsV.en, label: 'years of experience' }] : []),
+    ...(projects ? [{ value: projectsV.en, label: 'projects completed' }] : []),
+    { value: social.followers.tiktok.replace('.', ','), label: 'followers on TikTok' },
+    { value: social.followers.instagram.replace('.', ','), label: 'followers on Instagram' },
+    { value: 'Free', label: 'site visit and quote' },
     { value: area.en, label: 'areas we serve' },
   ],
 
@@ -414,8 +423,8 @@ const en: Dict = {
     title: 'How it works',
     lead: 'Simple, no paperwork maze.',
     items: [
-      { title: 'Send a message', text: 'On WhatsApp or Viber, with a few words and, if you like, a photo of the space.' },
-      { title: 'We talk it through', text: 'We discuss your idea and take measurements.' },
+      { title: 'Send a message', text: 'On WhatsApp or Viber, with a few words and a photo of the space. You get a first estimate.' },
+      { title: 'Free site visit', text: 'We come to your space anywhere in Attica, talk through your idea and take measurements.' },
       { title: 'You get a quote', text: 'Free and with no obligation. Decide in your own time.' },
       { title: 'We build & hand over', text: 'We build, install and hand over ready to paint, or painted, as you prefer.' },
     ],
@@ -432,7 +441,7 @@ const en: Dict = {
     items: [
       {
         q: 'How much does plasterboard work cost?',
-        a: `It depends on size, design and lighting. Send us a photo and rough dimensions for a first estimate. The quote is free. ${todo('TO CONFIRM: indicative prices')}`,
+        a: `It depends on size, design and lighting. Send us a photo and rough dimensions for a first estimate. The site visit and quote are free. ${todo('TO CONFIRM: indicative prices')}`,
       },
       {
         q: 'How long does it take?',
@@ -448,7 +457,11 @@ const en: Dict = {
       },
       {
         q: 'Which areas do you cover?',
-        a: `${area.en}. If you’re elsewhere, send us a message and we’ll see.`,
+        a: `${area.en}. The site visit is free anywhere in Attica.`,
+      },
+      {
+        q: 'How can I pay?',
+        a: 'By cash, card or bank transfer.',
       },
     ],
   },

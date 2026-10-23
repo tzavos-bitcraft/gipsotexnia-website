@@ -29,8 +29,11 @@ export const business = {
     en: string;
     schema: string[];
   },
-  // TODO-CLIENT: hours, e.g. { el: 'Δευτέρα – Σάββατο, 08:00 – 20:00', en: '…', schema: ['Mo-Sa 08:00-20:00'] }
-  hours: null as null | { el: string; en: string; schema: string[] },
+  hours: { el: 'Δευτέρα – Σάββατο, 08:00 – 20:00', en: 'Monday – Saturday, 08:00 – 20:00', schema: ['Mo-Sa 08:00-20:00'] } as null | {
+    el: string;
+    en: string;
+    schema: string[];
+  },
   // TODO-CLIENT: years in business (number), e.g. 12
   yearsExperience: null as null | number,
   // TODO-CLIENT: completed projects (number), e.g. 300
@@ -71,6 +74,8 @@ export const social = {
   tiktokHandle: '@gipsotexnia',
   instagram: 'https://www.instagram.com/gipsotexnia/',
   instagramHandle: '@gipsotexnia',
+  /** Follower counts shown in the trust strip (rounded down). Checked 2026-10-23: TikTok 3,817 · Instagram 1,797. */
+  followers: { tiktok: '3.800+', instagram: '1.700+' },
 };
 
 /** Pre-filled WhatsApp messages. */
