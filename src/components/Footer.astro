@@ -56,11 +56,14 @@ const year = new Date().getFullYear();
   </div>
   <div class="wrap legal">
     <p>
-      © {year} {d.meta.siteName}. {d.footer.rights} · <a href={path('privacy', lang)}>{d.nav.privacy}</a> ·
+      © {year} {d.meta.siteName}. {d.footer.rights} · <a href={path('privacy', lang)}>{d.nav.privacy}</a> ·{' '}
       <button type="button" class="linklike" data-consent-open>{d.consent.settings}</button>
     </p>
     <p class="legal-info">
       {`${legal.name} · ${lang === 'el' ? 'ΑΦΜ' : 'VAT'} ${legal.vat} · ${lang === 'el' ? 'ΔΟΥ' : 'Tax office'} ${legal.taxOffice} · ${legal.address.street[lang]}, ${legal.address.postalCode} ${legal.address.city[lang]}`}
+    </p>
+    <p class="credit">
+      Crafted &amp; curated by <a href="https://bitcraft.gr" target="_blank" rel="noopener">bitcraft.gr</a>
     </p>
   </div>
 </footer>
@@ -146,6 +149,13 @@ const year = new Date().getFullYear();
     color: #fff;
     cursor: pointer;
     text-decoration: underline;
+  }
+  .credit {
+    margin-top: 14px !important;
+    font-size: 0.85rem;
+  }
+  .credit a {
+    font-weight: 700;
   }
   .legal p {
     margin: 0 0 6px;
