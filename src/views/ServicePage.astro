@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Rich from '../components/Rich.astro';
+import { t } from '../i18n/ui';
+import { path, servicePath, type Lang } from '../i18n/routes';
+import { services, type Service } from '../data/services';
+import { photo, photos } from '../data/photos';
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+  service: Service;
+}
+const { lang, service: s } = Astro.props;
+const d = t(lang);
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const site = Astro.site!;
+const main = photo(s.photo);
+const gallery = photos.filter((p) => p.service === s.key && p.key !== s.photo);
+const faq = s.faq.map((f) => ({ q: f.q[lang], a: f.a[lang] }));
+const crumbs = [
+  { name: d.nav.home, href: path('home', lang) },
+  { name: d.nav.services, href: path('services', lang) },
+  { name: s.title[lang], href: servicePath(s.key, lang) },
+];
+const others = services.filter((x) => x.key !== s.key);
+const faqTitle = lang === 'el' ? `Ερωτήσεις για: ${s.title.el}` : `Questions about ${s.title.en.toLowerCase()}`;
+---
+
+<Base
+  lang={lang}
+  page="services"
+  title={s.meta.title[lang]}
+  description={s.meta.description[lang]}
+  altPath={servicePath(s.key, other)}
+  schema={[serviceSchema(site, s, lang), breadcrumbSchema(site, crumbs.map((c) => ({ name: c.name, path: c.href }))), faqSchema(faq)]}
+>
+  <PageHead title={s.title[lang]} lead={s.short[lang]} crumbs={crumbs}>
+    {s.confirm && <p><span class="badge">{d.testimonials.confirmBadge}</span></p>}
+  </PageHead>
+
+  <section class="section" style="padding-top: 16px">
+    <div class="wrap split">
+      <div class="prose">
+        {s.intro[lang].map((p) => <Rich as="p" text={p} />)}
+        <h2 class="h3">{lang === 'el' ? 'Ιδανικό για' : 'Ideal for'}</h2>
+        <ul class="check-list">
+          {
+            s.uses[lang].map((u) => (
+              <li>
+                <Icon name="check" />
+                {u}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="cta-inline">
+          <ContactButtons lang={lang} place={`service-${s.key}`} />
+        </div>
+      </div>
+      <Image src={main.src} alt={main.alt[lang]} widths={[400, 700, 1000]} sizes="(min-width: 900px) 520px, 100vw" loading="eager" class="main-img" />
+    </div>
+  </section>
+
+  {
+    s.key === 'wall-units' && (
+      <section class="section section--sand">
+        <div class="wrap">
+          <div class="section-head section-head--center">
+            <h2>{d.beforeAfter.title}</h2>
+            <p>{d.beforeAfter.lead}</p>
+          </div>
+          <BeforeAfter lang={lang} />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    gallery.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>{d.work.title}</h2>
+          </div>
+          <PhotoGrid lang={lang} items={gallery} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--sand">
+    <div class="wrap">
+      <Faq title={faqTitle} items={faq} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>{lang === 'el' ? 'Δείτε και' : 'See also'}</h2>
+      <ul class="others">
+        {
+          others.map((o) => (
+            <li>
+              <a href={servicePath(o.key, lang)}>
+                {o.title[lang]}
+                <Icon name="arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} place={`service-${s.key}-cta`} />
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+    }
+  }
+  .main-img {
+    width: 100%;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .h3 {
+    font-size: 1.25rem;
+    margin-top: 1.5em;
+  }
+  .cta-inline {
+    margin-top: 32px;
+  }
+  .others {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .others a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .others :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+</style>

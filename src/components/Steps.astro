@@ -1,0 +1,71 @@
+---
+import Rich from './Rich.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+interface Props {
+  lang: Lang;
+}
+const s = t(Astro.props.lang).steps;
+---
+
+<section class="section section--sand">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>{s.title}</h2>
+      <p>{s.lead}</p>
+    </div>
+    <ol class="steps">
+      {
+        s.items.map((i, n) => (
+          <li>
+            <span class="num" aria-hidden="true">{n + 1}</span>
+            <h3>{i.title}</h3>
+            <Rich as="p" text={i.text} />
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+    counter-reset: s;
+  }
+  @media (min-width: 720px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1040px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  li {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .num {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--green-700);
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  p {
+    color: var(--muted);
+    margin: 0;
+  }
+</style>

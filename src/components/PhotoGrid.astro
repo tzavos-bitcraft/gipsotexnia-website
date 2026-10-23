@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import { t } from '../i18n/ui';
+import type { Photo } from '../data/photos';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  items: Photo[];
+}
+const { lang, items } = Astro.props;
+const wip = t(lang).work.wip;
+---
+
+<ul class="photos">
+  {
+    items.map((p) => (
+      <li>
+        <figure>
+          <Image src={p.src} alt={p.alt[lang]} widths={[360, 560, 800]} sizes="(min-width: 960px) 370px, (min-width: 600px) 50vw, 100vw" />
+          {p.wip && <span class="badge badge--wip">{wip}</span>}
+          <figcaption>{p.caption[lang]}</figcaption>
+        </figure>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .photos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 600px) {
+    .photos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 960px) {
+    .photos {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  figure {
+    position: relative;
+    margin: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  figcaption {
+    padding: 12px 16px 14px;
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+  .badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+  }
+</style>

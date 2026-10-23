@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import Icon from '../components/Icon.astro';
+import Rich from '../components/Rich.astro';
+import { t } from '../i18n/ui';
+import { todo } from '../i18n/todo';
+import { contact, business, social, links } from '../config/site';
+import { path, type Lang } from '../i18n/routes';
+import { breadcrumbSchema } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const c = d.contactSection;
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const crumbs = [
+  { name: d.nav.home, href: path('home', lang) },
+  { name: d.nav.contact, href: path('contact', lang) },
+];
+const tbd = (el: string, en: string) => todo(lang === 'el' ? `ΣΥΜΠΛΗΡΩΣΗ: ${el}` : `TO CONFIRM: ${en}`);
+const area = business.areaServed?.[lang] ?? tbd('περιοχές', 'areas');
+const hours = business.hours?.[lang] ?? tbd('ωράριο', 'hours');
+const email = contact.email || tbd('email', 'email');
+---
+
+<Base
+  lang={lang}
+  page="contact"
+  title={d.meta.contact.title}
+  description={d.meta.contact.description}
+  altPath={path('contact', other)}
+  schema={[breadcrumbSchema(Astro.site!, crumbs.map((x) => ({ name: x.name, path: x.href })))]}
+>
+  <PageHead title={c.pageTitle} lead={c.pageLead} crumbs={crumbs} />
+
+  <section class="section" style="padding-top: 16px">
+    <div class="wrap split">
+      <div class="card box">
+        <ContactButtons lang={lang} variant="long" place="contact-page" />
+        <p class="tip">{d.cta.photoTip}</p>
+        <p class="tip">{d.cta.viberNote}</p>
+      </div>
+      <dl class="card info">
+        <div>
+          <dt><Icon name="phone" />{c.phone}</dt>
+          <dd><a href={links.call()}>{contact.phoneDisplay}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="mail" />{c.email}</dt>
+          <dd>{contact.email ? <a href={links.email()}>{contact.email}</a> : <Rich text={email} />}</dd>
+        </div>
+        <div>
+          <dt><Icon name="pin" />{c.area}</dt>
+          <dd><Rich text={area} /></dd>
+        </div>
+        <div>
+          <dt><Icon name="clock" />{c.hours}</dt>
+          <dd><Rich text={hours} /></dd>
+        </div>
+        <div>
+          <dt>{c.followUs}</dt>
+          <dd class="social">
+            <a href={social.tiktok} target="_blank" rel="noopener"><Icon name="tiktok" />TikTok</a>
+            <a href={social.instagram} target="_blank" rel="noopener"><Icon name="instagram" />Instagram</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.3fr 0.7fr;
+    }
+  }
+  .box,
+  .info {
+    padding: clamp(24px, 4vw, 40px);
+  }
+  .tip {
+    color: var(--muted);
+    margin: 16px 0 0;
+    font-size: 0.95rem;
+  }
+  .info {
+    margin: 0;
+    display: grid;
+    gap: 20px;
+  }
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  dt :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--green-700);
+  }
+  dd {
+    margin: 4px 0 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .social {
+    display: flex;
+    gap: 16px;
+  }
+  .social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .social :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+</style>

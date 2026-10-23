@@ -1,0 +1,60 @@
+---
+import Rich from './Rich.astro';
+interface Props {
+  title: string;
+  items: { q: string; a: string }[];
+}
+const { title, items } = Astro.props;
+---
+
+<div class="faq">
+  <h2>{title}</h2>
+  {
+    items.map((i) => (
+      <details>
+        <summary>{i.q}</summary>
+        <Rich as="p" text={i.a} />
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    max-width: 780px;
+  }
+  details {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+  }
+  summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 18px 52px 18px 20px;
+    font-weight: 700;
+    position: relative;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--green-700);
+  }
+  details[open] summary::after {
+    content: '–';
+  }
+  details :global(p) {
+    padding: 0 20px 18px;
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

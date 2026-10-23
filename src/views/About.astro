@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import VideoCard from '../components/VideoCard.astro';
+import WhyUs from '../components/WhyUs.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Rich from '../components/Rich.astro';
+import { t } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+import { vanToolsPhoto } from '../data/photos';
+import { breadcrumbSchema } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const a = d.about;
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const crumbs = [
+  { name: d.nav.home, href: path('home', lang) },
+  { name: d.nav.about, href: path('about', lang) },
+];
+---
+
+<Base
+  lang={lang}
+  page="about"
+  title={d.meta.about.title}
+  description={d.meta.about.description}
+  altPath={path('about', other)}
+  schema={[breadcrumbSchema(Astro.site!, crumbs.map((c) => ({ name: c.name, path: c.href })))]}
+>
+  <PageHead title={a.title} lead={a.lead} crumbs={crumbs} />
+
+  <section class="section" style="padding-top: 16px">
+    <div class="wrap split">
+      <div class="prose">
+        {a.story.map((p) => <Rich as="p" text={p} />)}
+        <Image src={vanToolsPhoto} alt={a.vanAlt} widths={[400, 700, 1000]} sizes="(min-width: 900px) 600px, 100vw" class="van" />
+      </div>
+      <VideoCard src="/media/van.mp4" poster="/media/van-poster.webp" label={a.vanVideoLabel} lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{a.valuesTitle}</h2>
+      </div>
+      <ul class="grid grid--3 values">
+        {
+          a.values.map((v) => (
+            <li class="card">
+              <Rich as="h3" text={v.title} />
+              <Rich as="p" text={v.text} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <WhyUs lang={lang} />
+  <CtaBand lang={lang} place="about-cta" />
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.4fr 0.6fr;
+    }
+  }
+  .van {
+    width: 100%;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-top: 24px;
+  }
+  .values {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .values li {
+    padding: 24px;
+  }
+</style>

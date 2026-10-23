@@ -1,0 +1,22 @@
+{
+  "_help": "Paste full TikTok / Instagram post URLs below. 'featured' shows first (large), 'latest' below it. Order = display order. See README → 'Updating TikTok & Instagram posts'.",
+  "tiktok": {
+    "featured": [
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000001",
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000002",
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000003"
+    ],
+    "latest": [
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000004",
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000005",
+      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000006"
+    ]
+  },
+  "instagram": {
+    "posts": [
+      "TODO-CLIENT: https://www.instagram.com/p/XXXXXXXXXXX/",
+      "TODO-CLIENT: https://www.instagram.com/p/YYYYYYYYYYY/",
+      "TODO-CLIENT: https://www.instagram.com/p/ZZZZZZZZZZZ/"
+    ]
+  }
+}

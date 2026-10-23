@@ -1,0 +1,56 @@
+---
+import Rich from './Rich.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+interface Props {
+  lang: Lang;
+}
+const items = t(Astro.props.lang).trust;
+---
+
+<section class="trust" aria-label={Astro.props.lang === 'el' ? 'Με μια ματιά' : 'At a glance'}>
+  <ul class="wrap">
+    {
+      items.map((i) => (
+        <li>
+          <Rich as="strong" text={i.value} />
+          <span>{i.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .trust {
+    background: var(--card);
+    border-block: 1px solid var(--line);
+  }
+  ul {
+    list-style: none;
+    margin: 0 auto;
+    padding-block: 22px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 16px;
+  }
+  @media (min-width: 820px) {
+    ul {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  li {
+    display: grid;
+    gap: 2px;
+  }
+  strong {
+    font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+    font-weight: 800;
+    color: var(--green-700);
+    line-height: 1.2;
+  }
+  span {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

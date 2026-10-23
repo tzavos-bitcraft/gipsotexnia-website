@@ -1,0 +1,148 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-horizontal.webp';
+import Icon from './Icon.astro';
+import Rich from './Rich.astro';
+import { contact, business, social, links, legal } from '../config/site';
+import { t } from '../i18n/ui';
+import { todo } from '../i18n/todo';
+import { path, servicePath, type Lang, type PageKey } from '../i18n/routes';
+import { services } from '../data/services';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const pages: PageKey[] = ['home', 'services', 'projects', 'about', 'contact'];
+const area = business.areaServed?.[lang] ?? todo(lang === 'el' ? 'ΣΥΜΠΛΗΡΩΣΗ: περιοχές' : 'TO CONFIRM: areas');
+const hours = business.hours?.[lang] ?? todo(lang === 'el' ? 'ΣΥΜΠΛΗΡΩΣΗ: ωράριο' : 'TO CONFIRM: hours');
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div class="about">
+      <Image src={logo} alt={d.meta.siteName} width={180} densities={[1, 2]} />
+      <p>{d.footer.tagline}</p>
+      <div class="social">
+        <a href={social.tiktok} target="_blank" rel="noopener" aria-label={`TikTok ${social.tiktokHandle}`}><Icon name="tiktok" /></a>
+        <a href={social.instagram} target="_blank" rel="noopener" aria-label={`Instagram ${social.instagramHandle}`}><Icon name="instagram" /></a>
+        <a href={links.whatsapp(lang)} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" /></a>
+        <a href={links.viber()} aria-label="Viber"><Icon name="viber" /></a>
+      </div>
+    </div>
+    <nav aria-label={d.footer.pages}>
+      <h2>{d.footer.pages}</h2>
+      <ul>
+        {pages.map((k) => <li><a href={path(k, lang)}>{d.nav[k]}</a></li>)}
+      </ul>
+    </nav>
+    <nav aria-label={d.nav.services}>
+      <h2>{d.nav.services}</h2>
+      <ul>
+        {services.map((s) => <li><a href={servicePath(s.key, lang)}>{s.title[lang]}</a></li>)}
+      </ul>
+    </nav>
+    <div>
+      <h2>{d.footer.contact}</h2>
+      <ul class="contact">
+        <li><Icon name="phone" /><a href={links.call()}>{contact.phoneDisplay}</a></li>
+        {contact.email && <li><Icon name="mail" /><a href={links.email()}>{contact.email}</a></li>}
+        <li><Icon name="pin" /><Rich text={area} /></li>
+        <li><Icon name="clock" /><Rich text={hours} /></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p>© {year} {d.meta.siteName}. {d.footer.rights}</p>
+    <p class="legal-info">
+      {`${legal.name} · ${lang === 'el' ? 'ΑΦΜ' : 'VAT'} ${legal.vat} · ${lang === 'el' ? 'ΔΟΥ' : 'Tax office'} ${legal.taxOffice} · ${legal.address.street[lang]}, ${legal.address.postalCode} ${legal.address.city[lang]}`}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: #dfe7e4;
+    padding: 56px 0 120px;
+    font-size: 0.98rem;
+  }
+  .cols {
+    display: grid;
+    gap: 36px;
+  }
+  @media (min-width: 720px) {
+    .cols {
+      grid-template-columns: 1.4fr 1fr 1.2fr 1.3fr;
+    }
+  }
+  .about img {
+    background: #fff;
+    border-radius: 14px;
+    padding: 10px 14px;
+    width: 200px;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9fb5ad;
+    margin-bottom: 14px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--green-500);
+    text-decoration: underline;
+  }
+  .contact li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .contact :global(svg) {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    margin-top: 4px;
+    color: var(--green-500);
+  }
+  .social {
+    display: flex;
+    gap: 10px;
+  }
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.08);
+  }
+  .social :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+  .legal p {
+    margin: 0 0 6px;
+  }
+  .legal {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    color: #9fb5ad;
+    font-size: 0.88rem;
+  }
+</style>

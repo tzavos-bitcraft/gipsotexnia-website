@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import SocialSection from '../components/SocialSection.astro';
+import WhyUs from '../components/WhyUs.astro';
+import Steps from '../components/Steps.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { t } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+import { photo } from '../data/photos';
+import { faqSchema } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const featured = ['villa-living-1', 'ceiling-cove-living', 'wave-wall', 'ceiling-spots-cove', 'arched-counter-2', 'acoustic-ceiling-office'].map(photo);
+---
+
+<Base lang={lang} page="home" title={d.meta.home.title} description={d.meta.home.description} altPath={path('home', other)} schema={[faqSchema(d.faq.items)]}>
+  <Hero lang={lang} />
+  <TrustStrip lang={lang} />
+
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{d.services.title}</h2>
+        <p>{d.services.lead}</p>
+      </div>
+      <ServiceCards lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="wrap ba-grid">
+      <div class="section-head">
+        <span class="eyebrow">{d.beforeAfter.before} → {d.beforeAfter.after}</span>
+        <h2>{d.beforeAfter.title}</h2>
+        <p>{d.beforeAfter.lead}</p>
+        <a class="btn btn--ghost" href={path('projects', lang)}>
+          {d.cta.seeAllProjects}
+          <Icon name="arrow" />
+        </a>
+      </div>
+      <BeforeAfter lang={lang} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{d.work.title}</h2>
+        <p>{d.work.lead}</p>
+      </div>
+      <PhotoGrid lang={lang} items={featured} />
+      <p class="center">
+        <a class="btn btn--primary" href={path('projects', lang)}>
+          {d.cta.seeAllProjects}
+          <Icon name="arrow" />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <SocialSection lang={lang} />
+  <WhyUs lang={lang} />
+  <Steps lang={lang} />
+  <Testimonials lang={lang} />
+
+  <section class="section section--sand">
+    <div class="wrap">
+      <Faq title={d.faq.title} items={d.faq.items} />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} place="home-cta" />
+</Base>
+
+<style>
+  .ba-grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .ba-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 56px;
+    }
+  }
+  .center {
+    text-align: center;
+    margin-top: 12px;
+  }
+  .btn :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+</style>

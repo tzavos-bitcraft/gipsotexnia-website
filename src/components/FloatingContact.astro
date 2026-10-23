@@ -1,0 +1,147 @@
+---
+// Persistent contact button (bottom-right on every page). Opens WhatsApp / Viber / Call.
+import Icon from './Icon.astro';
+import { links } from '../config/site';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = t(lang).cta;
+---
+
+<div class="fab" data-fab>
+  <div class="fab-panel" id="fab-panel" role="dialog" aria-modal="false" aria-labelledby="fab-title" hidden>
+    <p class="fab-title" id="fab-title">{c.floatingTitle}</p>
+    <p class="fab-sub">{c.floatingSub}</p>
+    <a class="btn btn--wa" href={links.whatsapp(lang)} target="_blank" rel="noopener" data-contact="whatsapp" data-place="floating">
+      <Icon name="whatsapp" />
+      {c.whatsappLong}
+    </a>
+    <a class="btn btn--viber" href={links.viber()} data-contact="viber" data-place="floating">
+      <Icon name="viber" />
+      {c.viberLong}
+    </a>
+    <a class="btn btn--call" href={links.call()} data-contact="call" data-place="floating">
+      <Icon name="phone" />
+      {c.callLong}
+    </a>
+    <p class="fab-note">{c.photoTip}</p>
+  </div>
+  <button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-panel">
+    <Icon name="chat" class="i-open" />
+    <Icon name="close" class="i-close" />
+    <span class="fab-label">{c.floatingOpen}</span>
+  </button>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-fab]');
+  if (root) {
+    const btn = root.querySelector<HTMLButtonElement>('.fab-btn')!;
+    const panel = root.querySelector<HTMLElement>('.fab-panel')!;
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (open) panel.querySelector<HTMLElement>('a')?.focus();
+    };
+    btn.addEventListener('click', () => set(panel.hidden));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) {
+        set(false);
+        btn.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!panel.hidden && !root.contains(e.target as Node)) set(false);
+    });
+  }
+</script>
+
+<style>
+  .fab {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .fab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 60px;
+    padding: 0 22px 0 18px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--green-700);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+  }
+  .fab-btn :global(svg) {
+    width: 26px;
+    height: 26px;
+  }
+  .fab-btn :global(.i-close),
+  .fab-btn[aria-expanded='true'] :global(.i-open) {
+    display: none;
+  }
+  .fab-btn[aria-expanded='true'] :global(.i-close) {
+    display: block;
+  }
+  .fab-btn[aria-expanded='false'] {
+    animation: nudge 6s ease-in-out 3s 2;
+  }
+  @keyframes nudge {
+    0%,
+    90%,
+    100% {
+      transform: translateY(0);
+    }
+    93% {
+      transform: translateY(-6px);
+    }
+    96% {
+      transform: translateY(0);
+    }
+  }
+  .fab-panel {
+    width: min(340px, calc(100vw - 32px));
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 20px;
+    display: grid;
+    gap: 10px;
+  }
+  .fab-panel[hidden] {
+    display: none;
+  }
+  .fab-panel .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .fab-title {
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .fab-sub,
+  .fab-note {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .fab-note {
+    margin: 4px 0 0;
+  }
+</style>

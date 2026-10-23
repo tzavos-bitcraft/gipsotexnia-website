@@ -1,0 +1,174 @@
+---
+// TikTok (featured + latest) and Instagram, driven by content/social.json.
+// Embeds are iframes with loading="lazy": nothing loads until the visitor scrolls near them.
+import Icon from './Icon.astro';
+import { social } from '../config/site';
+import { t } from '../i18n/ui';
+import { tiktokFeatured, tiktokLatest, instagramPosts, type Embed } from '../lib/social';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tk = t(lang).tiktok;
+const ig = t(lang).instagram;
+const groups: { title: string; items: Embed[] }[] = [
+  { title: tk.featured, items: tiktokFeatured },
+  { title: tk.latest, items: tiktokLatest },
+];
+---
+
+<section class="section section--white social" id="tiktok">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <span class="eyebrow">{social.tiktokHandle}</span>
+      <h2>{tk.title}</h2>
+      <p>{tk.lead}</p>
+      <a class="btn btn--tiktok" href={social.tiktok} target="_blank" rel="noopener">
+        <Icon name="tiktok" />
+        {tk.follow}
+      </a>
+    </div>
+
+    {
+      groups.map((g) => (
+        <div class="group">
+          <h3>{g.title}</h3>
+          <ul class="reel">
+            {g.items.map((e) => (
+              <li>
+                {e.embed ? (
+                  <iframe src={e.embed} title={tk.embedTitle} loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen />
+                ) : (
+                  <a class="ph" href={social.tiktok} target="_blank" rel="noopener">
+                    <Icon name="tiktok" />
+                    <strong>{tk.placeholder}</strong>
+                    <span>{tk.placeholderSub}</span>
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+
+    <div class="section-head section-head--center ig-head" id="instagram">
+      <span class="eyebrow">{social.instagramHandle}</span>
+      <h2>{ig.title}</h2>
+      <p>{ig.lead}</p>
+      <a class="btn btn--ig" href={social.instagram} target="_blank" rel="noopener">
+        <Icon name="instagram" />
+        {ig.follow}
+      </a>
+    </div>
+    <ul class="reel reel--ig">
+      {
+        instagramPosts.map((e) => (
+          <li>
+            {e.embed ? (
+              <iframe src={e.embed} title={ig.embedTitle} loading="lazy" />
+            ) : (
+              <a class="ph ph--ig" href={social.instagram} target="_blank" rel="noopener">
+                <Icon name="instagram" />
+                <strong>{ig.placeholder}</strong>
+                <span>{social.instagramHandle}</span>
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .btn--tiktok {
+    background: #111;
+    color: #fff;
+  }
+  .btn--tiktok:hover {
+    color: #fff;
+    background: #000;
+  }
+  .btn--ig {
+    background: linear-gradient(45deg, #f09433, #dc2743 50%, #bc1888);
+    color: #fff;
+  }
+  .btn--ig:hover {
+    color: #fff;
+  }
+  .group {
+    margin-bottom: 40px;
+  }
+  .group h3 {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .reel {
+    list-style: none;
+    margin: 0;
+    padding: 4px 4px 16px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (min-width: 1040px) {
+    .reel {
+      justify-content: center;
+      overflow: visible;
+    }
+  }
+  .reel li {
+    flex: 0 0 min(300px, 78vw);
+    scroll-snap-align: center;
+  }
+  iframe,
+  .ph {
+    display: block;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--sand);
+  }
+  .reel--ig iframe {
+    aspect-ratio: 4 / 5.6;
+  }
+  .reel li:has(.ph) {
+    flex-basis: min(220px, 60vw);
+  }
+  .ph {
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    padding: 24px;
+    color: var(--ink);
+    text-decoration: none;
+    background:
+      linear-gradient(160deg, rgb(69 185 138 / 0.18), rgb(40 150 196 / 0.14)),
+      var(--sand);
+    border: 2px dashed var(--line);
+  }
+  .ph :global(svg) {
+    width: 40px;
+    height: 40px;
+  }
+  .ph span {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .ig-head {
+    margin-top: clamp(48px, 7vw, 88px);
+  }
+</style>

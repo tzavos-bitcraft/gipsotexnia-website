@@ -1,0 +1,107 @@
+---
+// WhatsApp / Viber / Call buttons with reassurance copy. Used in the hero, CTAs and contact page.
+import Icon from './Icon.astro';
+import Rich from './Rich.astro';
+import { links } from '../config/site';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  /** "long" uses full labels ("Message us on WhatsApp"). */
+  variant?: 'short' | 'long';
+  reassure?: boolean;
+  align?: 'start' | 'center';
+  /** Analytics/source tag added as data attribute. */
+  place: string;
+}
+const { lang, variant = 'short', reassure = true, align = 'start', place } = Astro.props;
+const c = t(lang).cta;
+const long = variant === 'long';
+---
+
+<div class:list={['contact-buttons', `contact-buttons--${align}`]}>
+  {
+    reassure && (
+      <p class="reassure">
+        <span class="dot" aria-hidden="true" />
+        <strong>{c.reassure}</strong>
+      </p>
+    )
+  }
+  <div class="row">
+    <a class="btn btn--wa" href={links.whatsapp(lang)} target="_blank" rel="noopener" data-contact="whatsapp" data-place={place}>
+      <Icon name="whatsapp" />
+      {long ? c.whatsappLong : c.whatsapp}
+    </a>
+    <a class="btn btn--viber" href={links.viber()} data-contact="viber" data-place={place}>
+      <Icon name="viber" />
+      {long ? c.viberLong : c.viber}
+    </a>
+    <a class="btn btn--call" href={links.call()} data-contact="call" data-place={place}>
+      <Icon name="phone" />
+      {long ? c.callLong : c.call}
+    </a>
+  </div>
+  {reassure && <Rich as="p" class="reassure-sub" text={c.reassureSub} />}
+</div>
+
+<style>
+  .contact-buttons {
+    display: grid;
+    gap: 14px;
+  }
+  .contact-buttons--center {
+    justify-items: center;
+    text-align: center;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 560px;
+  }
+  .row .btn--wa {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 560px) {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      width: auto;
+    }
+    .contact-buttons--center .row {
+      justify-content: center;
+    }
+  }
+  .reassure {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--wa);
+    box-shadow: 0 0 0 0 rgb(37 211 102 / 0.6);
+    animation: pulse 2s infinite;
+    flex: none;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px rgb(37 211 102 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(37 211 102 / 0);
+    }
+  }
+  .reassure-sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

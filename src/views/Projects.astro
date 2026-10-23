@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import VideoCard from '../components/VideoCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { t } from '../i18n/ui';
+import { social } from '../config/site';
+import { path, type Lang } from '../i18n/routes';
+import { photos } from '../data/photos';
+import { breadcrumbSchema } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const crumbs = [
+  { name: d.nav.home, href: path('home', lang) },
+  { name: d.nav.projects, href: path('projects', lang) },
+];
+---
+
+<Base
+  lang={lang}
+  page="projects"
+  title={d.meta.projects.title}
+  description={d.meta.projects.description}
+  altPath={path('projects', other)}
+  schema={[breadcrumbSchema(Astro.site!, crumbs.map((c) => ({ name: c.name, path: c.href })))]}
+>
+  <PageHead title={d.work.pageTitle} lead={d.work.pageLead} crumbs={crumbs}>
+    <a class="btn btn--sm tk" href={social.tiktok} target="_blank" rel="noopener">
+      <Icon name="tiktok" />
+      {d.tiktok.follow}
+    </a>
+  </PageHead>
+
+  <section class="section" style="padding-top: 16px">
+    <div class="wrap feature">
+      <div>
+        <h2>{d.beforeAfter.title}</h2>
+        <p class="muted">{d.beforeAfter.lead}</p>
+        <BeforeAfter lang={lang} />
+      </div>
+      <div>
+        <h2>{d.work.videoTitle}</h2>
+        <p class="muted">{d.work.videoLead}</p>
+        <VideoCard src="/media/walkthrough.mp4" poster="/media/walkthrough-poster.webp" label={d.work.videoLabel} lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{d.work.title}</h2>
+        <p>{d.work.lead}</p>
+      </div>
+      <PhotoGrid lang={lang} items={photos} />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} place="projects-cta" />
+</Base>
+
+<style>
+  .tk {
+    background: #111;
+    color: #fff;
+  }
+  .tk:hover {
+    color: #fff;
+  }
+  .feature {
+    display: grid;
+    gap: 48px;
+  }
+  @media (min-width: 900px) {
+    .feature {
+      grid-template-columns: 1.3fr 0.7fr;
+    }
+  }
+  .muted {
+    color: var(--muted);
+  }
+</style>

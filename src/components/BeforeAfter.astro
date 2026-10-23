@@ -1,0 +1,132 @@
+---
+// Drag slider comparing the same wall before and after. Works with keyboard (range input).
+import { Image } from 'astro:assets';
+import { t } from '../i18n/ui';
+import { photo, tvWallBeforePhoto } from '../data/photos';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const b = t(lang).beforeAfter;
+const after = photo('tv-wall-after');
+const common = { widths: [400, 700, 1000], sizes: '(min-width: 760px) 680px, 100vw' };
+---
+
+<div class="ba" style="--pos: 50%">
+  <Image src={after.src} alt={b.afterAlt} {...common} class="img after" />
+  <div class="before-wrap">
+    <Image src={tvWallBeforePhoto} alt={b.beforeAlt} {...common} class="img before" />
+  </div>
+  <span class="tag tag-before" aria-hidden="true">{b.before}</span>
+  <span class="tag tag-after" aria-hidden="true">{b.after}</span>
+  <div class="handle" aria-hidden="true"><span></span></div>
+  <input type="range" min="0" max="100" value="50" aria-label={b.sliderLabel} />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.ba').forEach((el) => {
+    const input = el.querySelector('input')!;
+    const update = () => el.style.setProperty('--pos', `${input.value}%`);
+    input.addEventListener('input', update);
+    update();
+  });
+</script>
+
+<style>
+  .ba {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    margin-inline: auto;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 3 / 4;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  .img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .before-wrap {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+  .tag {
+    position: absolute;
+    top: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: rgb(255 255 255 / 0.94);
+    box-shadow: var(--shadow);
+  }
+  .tag-before {
+    left: 14px;
+  }
+  .tag-after {
+    right: 14px;
+    background: var(--green-700);
+    color: #fff;
+  }
+  .handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 3px;
+    margin-left: -1.5px;
+    background: #fff;
+    pointer-events: none;
+  }
+  .handle span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: var(--shadow-lg);
+  }
+  .handle span::before,
+  .handle span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    margin-top: -7px;
+  }
+  .handle span::before {
+    left: 6px;
+    border-right-color: var(--ink);
+  }
+  .handle span::after {
+    right: 6px;
+    border-left-color: var(--ink);
+  }
+  input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+  }
+  input:focus-visible + .handle,
+  .ba:has(input:focus-visible) .handle span {
+    outline: 3px solid var(--blue-500);
+  }
+</style>

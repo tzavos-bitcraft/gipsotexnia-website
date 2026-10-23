@@ -1,0 +1,216 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-horizontal.webp';
+import Icon from './Icon.astro';
+import { links } from '../config/site';
+import { t } from '../i18n/ui';
+import { path, type Lang, type PageKey } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  current: PageKey;
+  /** URL of this same page in the other language. */
+  altPath: string;
+}
+const { lang, current, altPath } = Astro.props;
+const n = t(lang).nav;
+const items: PageKey[] = ['services', 'projects', 'about', 'contact'];
+const otherLang: Lang = lang === 'el' ? 'en' : 'el';
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a href={path('home', lang)} class="brand" aria-label={n.homeLabel}>
+      <Image src={logo} alt="" width={168} densities={[1, 2]} loading="eager" fetchpriority="high" />
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label={lang === 'el' ? 'Κύριο μενού' : 'Main menu'}>
+      <ul>
+        {
+          items.map((k) => (
+            <li>
+              <a href={path(k, lang)} aria-current={current === k ? 'page' : undefined}>
+                {n[k]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="lang" href={altPath} hreflang={otherLang} lang={otherLang} aria-label={n.switchLangLabel}>
+        <Icon name="globe" />
+        {n.switchLang}
+      </a>
+    </nav>
+
+    <div class="actions">
+      <a class="btn btn--wa btn--sm head-wa" href={links.whatsapp(lang)} target="_blank" rel="noopener" data-contact="whatsapp" data-place="header">
+        <Icon name="whatsapp" />
+        <span>WhatsApp</span>
+      </a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" data-open-label={n.menu} data-close-label={n.close}>
+        <Icon name="menu" class="i-open" />
+        <Icon name="close" class="i-close" />
+        <span class="sr-only">{n.menu}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const nav = document.getElementById('site-nav');
+  if (btn && nav) {
+    const label = btn.querySelector('.sr-only')!;
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      nav.classList.toggle('open', open);
+      label.textContent = open ? btn.dataset.closeLabel! : btn.dataset.openLabel!;
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('open')) {
+        set(false);
+        btn.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgb(251 248 243 / 0.92);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 72px;
+  }
+  .brand img {
+    width: 150px;
+    height: auto;
+  }
+  .brand {
+    flex: none;
+  }
+  .actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .menu-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .menu-btn :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+  .menu-btn :global(.i-close),
+  .menu-btn[aria-expanded='true'] :global(.i-open) {
+    display: none;
+  }
+  .menu-btn[aria-expanded='true'] :global(.i-close) {
+    display: block;
+  }
+  .nav {
+    display: none;
+  }
+  .nav.open {
+    display: block;
+    position: absolute;
+    inset: 72px 0 auto 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    padding: 8px var(--gutter) 20px;
+  }
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav a {
+    display: block;
+    padding: 14px 4px;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav a[aria-current='page'] {
+    color: var(--green-700);
+  }
+  .lang {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 0 !important;
+  }
+  .lang :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+  .head-wa span {
+    display: none;
+  }
+  @media (min-width: 420px) {
+    .head-wa span {
+      display: inline;
+    }
+  }
+  @media (min-width: 900px) {
+    .brand img {
+      width: 168px;
+    }
+    .menu-btn {
+      display: none;
+    }
+    .nav,
+    .nav.open {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: static;
+      background: none;
+      box-shadow: none;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+    }
+    .nav ul {
+      display: flex;
+      gap: 4px;
+    }
+    .nav a {
+      border: 0;
+      font-size: 1rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+    .nav a:hover {
+      background: var(--sand);
+    }
+    .nav a[aria-current='page'] {
+      background: var(--green-50);
+    }
+    .actions {
+      margin-left: 8px;
+    }
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+// Short muted clip that plays inline by itself (no download, no fullscreen prompt).
+// It only starts loading when it scrolls into view, pauses when it leaves, and has a
+// pause/play button (needed for accessibility). Visitors who prefer reduced motion
+// get the poster and press play themselves.
+import Icon from './Icon.astro';
+
+interface Props {
+  src: string;
+  poster: string;
+  label: string;
+  lang: 'el' | 'en';
+}
+const { src, poster, label, lang } = Astro.props;
+const txt = lang === 'el' ? { pause: 'Παύση βίντεο', play: 'Αναπαραγωγή βίντεο' } : { pause: 'Pause video', play: 'Play video' };
+---
+
+<div class="video" data-autovideo>
+  <video
+    muted
+    loop
+    playsinline
+    preload="none"
+    poster={poster}
+    data-src={src}
+    aria-label={label}
+    width="540"
+    height="960"
+    disablepictureinpicture
+    controlslist="nodownload nofullscreen noremoteplayback"
+    oncontextmenu="return false"></video>
+  <button type="button" class="toggle" data-pause={txt.pause} data-play={txt.play} aria-label={txt.play}>
+    <Icon name="play" class="i-play" />
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"></path></svg>
+  </button>
+</div>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-autovideo]').forEach((box) => {
+    const v = box.querySelector('video')!;
+    const btn = box.querySelector<HTMLButtonElement>('.toggle')!;
+    let userPaused = reduce;
+    const load = () => {
+      if (!v.src) {
+        v.src = v.dataset.src!;
+        v.load();
+      }
+    };
+    const sync = () => {
+      const playing = !v.paused;
+      box.classList.toggle('playing', playing);
+      btn.setAttribute('aria-label', playing ? btn.dataset.pause! : btn.dataset.play!);
+    };
+    v.addEventListener('play', sync);
+    v.addEventListener('pause', sync);
+    btn.addEventListener('click', () => {
+      load();
+      if (v.paused) {
+        userPaused = false;
+        v.play().catch(() => {});
+      } else {
+        userPaused = true;
+        v.pause();
+      }
+    });
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          load();
+          if (!userPaused) v.play().catch(() => {});
+        } else if (!v.paused) v.pause();
+      },
+      { rootMargin: '200px 0px', threshold: 0.25 },
+    ).observe(v);
+  });
+</script>
+
+<style>
+  .video {
+    position: relative;
+    max-width: 360px;
+    margin-inline: auto;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: #000;
+  }
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+  }
+  .toggle {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.92);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+  }
+  .toggle :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+  .toggle :global(.i-pause),
+  .playing .toggle :global(.i-play) {
+    display: none;
+  }
+  .playing .toggle :global(.i-pause) {
+    display: block;
+  }
+</style>

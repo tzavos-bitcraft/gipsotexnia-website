@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import ContactButtons from './ContactButtons.astro';
+import Rich from './Rich.astro';
+import { t } from '../i18n/ui';
+import { photo } from '../data/photos';
+import type { Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const h = t(lang).hero;
+const img = photo('tv-wall-after');
+---
+
+<section class="hero">
+  <div class="wrap grid-hero">
+    <div class="copy">
+      <Rich as="p" class="eyebrow" text={h.eyebrow} />
+      <h1>{h.title}</h1>
+      <p class="lead">{h.lead}</p>
+      <ContactButtons lang={lang} place="hero" />
+    </div>
+    <div class="media">
+      <Image
+        src={img.src}
+        alt={h.imageAlt}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 960px) 520px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="hero-img"
+      />
+      <div class="float-chip" aria-hidden="true">
+        <span class="spark"></span>
+        {lang === 'el' ? 'Δικό μας έργο' : 'Our own work'}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: clamp(24px, 5vw, 72px) 0 clamp(40px, 7vw, 96px);
+    background:
+      radial-gradient(1200px 500px at 85% -10%, var(--green-50), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, var(--blue-50), transparent 60%);
+  }
+  .grid-hero {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+  /* Phones: message + contact buttons first (the #1 priority), photo right after. */
+  .media {
+    position: relative;
+  }
+  .lead {
+    font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    color: var(--muted);
+    max-width: 34ch;
+    margin-bottom: 28px;
+  }
+  .hero-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center 40%;
+    border-radius: 28px;
+    box-shadow: var(--shadow-lg);
+  }
+  .float-chip {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgb(255 255 255 / 0.94);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+  }
+  .spark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--green-500);
+  }
+  @media (min-width: 960px) {
+    .grid-hero {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+    }
+    .hero-img {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>
