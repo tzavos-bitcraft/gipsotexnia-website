@@ -4,6 +4,9 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FloatingContact from '../components/FloatingContact.astro';
+import Consent from '../components/Consent.astro';
+import { analytics } from '../config/site';
+import { hasRealEmbeds } from '../lib/social';
 import { t } from '../i18n/ui';
 import { plain } from '../i18n/todo';
 import { hreflang, type Lang, type PageKey } from '../i18n/routes';
@@ -65,7 +68,7 @@ const desc = plain(description);
     <meta name="theme-color" content="#fbf8f3" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s).replace(/</g, '\\u003c')} />)}
   </head>
   <body>
     <a class="skip-link" href="#main">{d.nav.skip}</a>
@@ -75,5 +78,6 @@ const desc = plain(description);
     </main>
     <Footer lang={lang} />
     <FloatingContact lang={lang} />
+    <Consent lang={lang} enabled={!!analytics.gaMeasurementId || hasRealEmbeds} />
   </body>
 </html>

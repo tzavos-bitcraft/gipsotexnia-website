@@ -1,0 +1,125 @@
+---
+// Privacy & cookies notice. Describes what this site actually does; review with the client
+// (and their accountant/lawyer) before going live.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { t } from '../i18n/ui';
+import { contact, legal, analytics } from '../config/site';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const other: Lang = lang === 'el' ? 'en' : 'el';
+const addr = `${legal.address.street[lang]}, ${legal.address.postalCode} ${legal.address.city[lang]}`;
+const updated = '2026-10-23';
+const ga = !!analytics.gaMeasurementId;
+---
+
+<Base lang={lang} page="privacy" title={d.meta.privacy.title} description={d.meta.privacy.description} altPath={path('privacy', other)}>
+  <PageHead title={lang === 'el' ? 'Προστασία δεδομένων & cookies' : 'Privacy & cookies'} />
+  <section class="section section--tight">
+    <div class="wrap prose policy">
+      {
+        lang === 'el' ? (
+          <>
+            <p>Τελευταία ενημέρωση: {updated}</p>
+            <h2>Ποιοι είμαστε</h2>
+            <p>
+              Υπεύθυνος επεξεργασίας είναι η επιχείρηση {legal.name} («Γυψοτεχνία»), ΑΦΜ {legal.vat}, {addr}. Επικοινωνία:{' '}
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>, {contact.phoneDisplay}.
+            </p>
+            <h2>Τι δεδομένα συλλέγουμε</h2>
+            <p>
+              Η ιστοσελίδα δεν έχει φόρμες ούτε λογαριασμούς χρηστών. Όταν μας στέλνετε μήνυμα σε WhatsApp ή Viber ή μας τηλεφωνείτε, βλέπουμε
+              ό,τι μας στέλνετε (όνομα, αριθμό, μήνυμα, φωτογραφίες) και το χρησιμοποιούμε μόνο για να σας απαντήσουμε και να σας δώσουμε προσφορά.
+              Για τα μηνύματα ισχύουν και οι όροι του WhatsApp ή του Viber.
+            </p>
+            <p>
+              Ο πάροχος φιλοξενίας της σελίδας (Vercel) καταγράφει τεχνικά στοιχεία κάθε επίσκεψης, όπως διεύθυνση IP και τύπο συσκευής, για λόγους
+              ασφάλειας και λειτουργίας.
+            </p>
+            <h2>Cookies</h2>
+            <ul>
+              <li>
+                <strong>Απαραίτητα:</strong> αποθηκεύουμε στη συσκευή σας μόνο την επιλογή σας για τα cookies.
+              </li>
+              {ga && (
+                <li>
+                  <strong>Στατιστικά (Google Analytics):</strong> μόνο αν πατήσετε «Αποδοχή». Μας δείχνει ανώνυμα πόσοι επισκέπτονται τη σελίδα, από
+                  πού έρχονται και πόσοι πατούν τα κουμπιά επικοινωνίας. Πάροχος: Google Ireland Ltd.
+                </li>
+              )}
+              <li>
+                <strong>Βίντεο TikTok και Instagram:</strong> φορτώνουν μόνο αν πατήσετε «Αποδοχή» ή «Εμφάνιση» σε ένα βίντεο. Τότε το TikTok ή το
+                Instagram μπορεί να ορίσει δικά του cookies.
+              </li>
+            </ul>
+            <p>
+              Μπορείτε να αλλάξετε την επιλογή σας οποιαδήποτε στιγμή από τον σύνδεσμο «{d.consent.settings}» στο κάτω μέρος της σελίδας.
+            </p>
+            <h2>Τα δικαιώματά σας</h2>
+            <p>
+              Έχετε δικαίωμα πρόσβασης, διόρθωσης, διαγραφής και εναντίωσης στην επεξεργασία των δεδομένων σας. Γράψτε μας στο{' '}
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>. Μπορείτε επίσης να υποβάλετε καταγγελία στην Αρχή Προστασίας Δεδομένων
+              Προσωπικού Χαρακτήρα (<a href="https://www.dpa.gr" rel="noopener" target="_blank">www.dpa.gr</a>).
+            </p>
+          </>
+        ) : (
+          <>
+            <p>Last updated: {updated}</p>
+            <h2>Who we are</h2>
+            <p>
+              The data controller is {legal.name} (“Gipsotexnia”), VAT {legal.vat}, {addr}, Greece. Contact:{' '}
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>, {contact.phone}.
+            </p>
+            <h2>What data we collect</h2>
+            <p>
+              This website has no forms or user accounts. When you message us on WhatsApp or Viber or call us, we see what you send (name, number,
+              message, photos) and use it only to reply and give you a quote. WhatsApp’s or Viber’s own terms also apply to those messages.
+            </p>
+            <p>Our hosting provider (Vercel) logs technical details of each visit, such as IP address and device type, for security and operation.</p>
+            <h2>Cookies</h2>
+            <ul>
+              <li>
+                <strong>Necessary:</strong> we only store your cookie choice on your device.
+              </li>
+              {ga && (
+                <li>
+                  <strong>Statistics (Google Analytics):</strong> only if you press “Accept”. It shows us, anonymously, how many people visit, where they
+                  come from and how many press the contact buttons. Provider: Google Ireland Ltd.
+                </li>
+              )}
+              <li>
+                <strong>TikTok and Instagram videos:</strong> load only if you press “Accept” or “Show” on a video. TikTok or Instagram may then set
+                their own cookies.
+              </li>
+            </ul>
+            <p>You can change your choice at any time with the “{d.consent.settings}” link at the bottom of the page.</p>
+            <h2>Your rights</h2>
+            <p>
+              You have the right to access, correct, delete and object to the processing of your data. Email us at{' '}
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>. You can also complain to the Hellenic Data Protection Authority (
+              <a href="https://www.dpa.gr" rel="noopener" target="_blank">www.dpa.gr</a>).
+            </p>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .policy h2 {
+    font-size: 1.35rem;
+    margin-top: 1.6em;
+  }
+  .policy ul {
+    padding-left: 1.2em;
+  }
+  .policy li {
+    margin-bottom: 0.6em;
+  }
+</style>

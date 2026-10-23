@@ -126,6 +126,9 @@ a:hover {
 .section {
   padding-block: var(--section);
 }
+.section--tight {
+  padding-top: 16px;
+}
 .section--sand {
   background: var(--sand);
 }

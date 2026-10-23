@@ -122,9 +122,10 @@ loads until the visitor scrolls near them. Entries that aren't real URLs yet (th
 **When the final domain is chosen** (`gipsotexnia.gr` is taken, so this is TODO-CLIENT):
 
 1. Vercel: go to **Project → Settings → Domains**, add the domain, and set the DNS records Vercel shows at the registrar.
-2. **Project → Settings → Environment Variables:**
+2. **Project → Settings → Environment Variables** (see `.env.example`):
    - `SITE_URL` = `https://<the-domain>` (no trailing slash)
    - `ALLOW_INDEXING` = `true` (opens the site to Google and AI crawlers, and removes `noindex`)
+   - `PUBLIC_GA_ID` = `G-XXXXXXXXXX` (Google Analytics, see section 5)
 3. Redeploy.
 
 ### Go-live checklist (Google + AI assistants)
@@ -150,7 +151,49 @@ Rankings and AI mentions for a local trade mostly depend on things outside the c
 
 ---
 
-## 5. TODO-CLIENT items
+## 5. Google Analytics
+
+1. In Google Analytics, open **Admin → Data streams → Web** and copy the **Measurement ID**
+   (`G-XXXXXXXXXX`). This is not the numeric account or property ID.
+2. Set it **either** in `src/config/site.ts` (`analytics.gaMeasurementId`) **or** as the Vercel
+   environment variable `PUBLIC_GA_ID`, then redeploy.
+
+How it behaves (GDPR/ePrivacy, required in Greece/EU):
+- With an ID set, a small GR/EN cookie banner appears with equal "Αποδοχή / Απόρριψη" buttons.
+  **GA loads only after "Accept".** The choice is stored in the browser, and visitors can change it any time
+  via "Ρυθμίσεις cookies" in the footer. Rejecting after accepting removes the `_ga` cookies.
+- Every WhatsApp / Viber / Call button sends a GA4 event **`contact_click`** with `method`
+  (`whatsapp`/`viber`/`call`) and `place` (`hero`, `floating`, `header`, `service-…`, …). In GA, mark
+  `contact_click` as a **key event** (Admin → Events) to count leads.
+- TikTok/Instagram embeds also set cookies, so they load only after consent, or when the visitor presses "Show" on one.
+- The privacy & cookies page (`/prostasia-dedomenon/`, `/en/privacy/`) describes exactly this. Have it reviewed
+  by the client before go-live.
+
+---
+
+## 6. Security
+
+The site is static HTML on Vercel: no server code, database, forms, logins or admin panel. That
+removes the usual attack routes (SQL injection, form spam, brute-force logins, plugin exploits).
+On top of that:
+
+| Measure | Where |
+| --- | --- |
+| Content-Security-Policy: only this site's own hashed scripts, plus Google Tag Manager; frames only from TikTok/Instagram; no plugins (`object-src 'none'`), no `<base>` hijacking | `astro.config.mjs` → `security.csp` (meta tag on every page) |
+| No inline scripts, styles or event handlers that the CSP would have to allow | components |
+| Clickjacking protection (`frame-ancestors 'none'`, `X-Frame-Options: DENY`) | `vercel.json` |
+| HTTPS forced (HSTS, 2 years), `nosniff`, strict `Referrer-Policy`, `Permissions-Policy` (no camera/mic/location), `Cross-Origin-Opener-Policy` | `vercel.json` |
+| All copy is HTML-escaped; structured data is JSON-escaped | `src/i18n/todo.ts`, `src/layouts/Base.astro` |
+| External links use `rel="noopener"` | components |
+| DDoS / TLS / edge protection | Vercel platform |
+| Dependencies: `npm audit` reported 0 vulnerabilities | run `npm audit` before each release |
+
+If you add a new third-party service (chat widget, map, other analytics), add its domains to the
+CSP in `astro.config.mjs` or the browser will block it.
+
+---
+
+## 7. TODO-CLIENT items
 
 Find them all with:
 

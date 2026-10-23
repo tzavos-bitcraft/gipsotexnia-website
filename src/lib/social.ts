@@ -27,3 +27,6 @@ function instagram(u: string): Embed {
 export const tiktokFeatured = data.tiktok.featured.map(tiktok);
 export const tiktokLatest = data.tiktok.latest.map(tiktok);
 export const instagramPosts = data.instagram.posts.map(instagram);
+
+/** True when at least one real post is configured (they need cookie consent). */
+export const hasRealEmbeds = [...tiktokFeatured, ...tiktokLatest, ...instagramPosts].some((e) => e.embed);

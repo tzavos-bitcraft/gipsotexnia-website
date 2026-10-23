@@ -1,6 +1,6 @@
 // Page slugs per language. Greek is the default (no prefix), English lives under /en/.
 export type Lang = 'el' | 'en';
-export type PageKey = 'home' | 'services' | 'projects' | 'about' | 'contact';
+export type PageKey = 'home' | 'services' | 'projects' | 'about' | 'contact' | 'privacy';
 
 export const routes: Record<PageKey, Record<Lang, string>> = {
   home: { el: '/', en: '/en/' },
@@ -8,6 +8,7 @@ export const routes: Record<PageKey, Record<Lang, string>> = {
   projects: { el: '/erga/', en: '/en/projects/' },
   about: { el: '/sxetika/', en: '/en/about/' },
   contact: { el: '/epikoinonia/', en: '/en/contact/' },
+  privacy: { el: '/prostasia-dedomenon/', en: '/en/privacy/' },
 };
 
 // Dedicated page per service (Greek and English slugs).

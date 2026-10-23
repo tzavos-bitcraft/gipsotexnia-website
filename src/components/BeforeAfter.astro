@@ -14,7 +14,7 @@ const after = photo('tv-wall-after');
 const common = { widths: [400, 700, 1000], sizes: '(min-width: 760px) 680px, 100vw' };
 ---
 
-<div class="ba" style="--pos: 50%">
+<div class="ba">
   <Image src={after.src} alt={b.afterAlt} {...common} class="img after" />
   <div class="before-wrap">
     <Image src={tvWallBeforePhoto} alt={b.beforeAlt} {...common} class="img before" />
@@ -44,6 +44,7 @@ const common = { widths: [400, 700, 1000], sizes: '(min-width: 760px) 680px, 100
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     aspect-ratio: 3 / 4;
+    --pos: 50%;
     user-select: none;
     touch-action: pan-y;
   }

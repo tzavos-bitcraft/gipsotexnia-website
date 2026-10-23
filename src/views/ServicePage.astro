@@ -47,7 +47,7 @@ const faqTitle = lang === 'el' ? `Ερωτήσεις για: ${s.title.el}` : `Q
     {s.confirm && <p><span class="badge">{d.testimonials.confirmBadge}</span></p>}
   </PageHead>
 
-  <section class="section" style="padding-top: 16px">
+  <section class="section section--tight">
     <div class="wrap split">
       <div class="prose">
         {s.intro[lang].map((p) => <Rich as="p" text={p} />)}

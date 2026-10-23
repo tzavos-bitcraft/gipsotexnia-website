@@ -13,6 +13,7 @@ interface Props {
 const { lang } = Astro.props;
 const tk = t(lang).tiktok;
 const ig = t(lang).instagram;
+const cs = t(lang).consent;
 const groups: { title: string; items: Embed[] }[] = [
   { title: tk.featured, items: tiktokFeatured },
   { title: tk.latest, items: tiktokLatest },
@@ -39,7 +40,11 @@ const groups: { title: string; items: Embed[] }[] = [
             {g.items.map((e) => (
               <li>
                 {e.embed ? (
-                  <iframe src={e.embed} title={tk.embedTitle} loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen />
+                  <div class="embed" data-embed={e.embed} data-title={tk.embedTitle}>
+                    <Icon name="tiktok" />
+                    <p>{cs.embedNote}</p>
+                    <button type="button" class="btn btn--sm btn--tiktok">{cs.embedLoad}</button>
+                  </div>
                 ) : (
                   <a class="ph" href={social.tiktok} target="_blank" rel="noopener">
                     <Icon name="tiktok" />
@@ -68,7 +73,11 @@ const groups: { title: string; items: Embed[] }[] = [
         instagramPosts.map((e) => (
           <li>
             {e.embed ? (
-              <iframe src={e.embed} title={ig.embedTitle} loading="lazy" />
+              <div class="embed embed--ig" data-embed={e.embed} data-title={ig.embedTitle}>
+                <Icon name="instagram" />
+                <p>{cs.embedNoteIg}</p>
+                <button type="button" class="btn btn--sm btn--ig">{cs.embedLoad}</button>
+              </div>
             ) : (
               <a class="ph ph--ig" href={social.instagram} target="_blank" rel="noopener">
                 <Icon name="instagram" />
@@ -82,6 +91,28 @@ const groups: { title: string; items: Embed[] }[] = [
     </ul>
   </div>
 </section>
+
+<script>
+  // Embeds set third-party cookies, so they load only after consent or when the visitor
+  // presses "Show" on one. Loaded iframes are lazy, so off-screen ones wait until scrolled to.
+  const load = (el: HTMLElement) => {
+    const f = document.createElement('iframe');
+    f.src = el.dataset.embed!;
+    f.title = el.dataset.title ?? '';
+    f.loading = 'lazy';
+    f.allow = 'encrypted-media; fullscreen; picture-in-picture';
+    f.allowFullscreen = true;
+    if (el.classList.contains('embed--ig')) f.className = 'ig';
+    el.replaceWith(f);
+  };
+  const loadAll = () => document.querySelectorAll<HTMLElement>('[data-embed]').forEach(load);
+  if (document.documentElement.dataset.consent === 'granted') loadAll();
+  document.addEventListener('consent:granted', loadAll);
+  document.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-embed]');
+    if (el && (e.target as HTMLElement).closest('button')) load(el);
+  });
+</script>
 
 <style>
   .btn--tiktok {
@@ -129,7 +160,8 @@ const groups: { title: string; items: Embed[] }[] = [
     flex: 0 0 min(300px, 78vw);
     scroll-snap-align: center;
   }
-  iframe,
+  .reel :global(iframe),
+  .embed,
   .ph {
     display: block;
     width: 100%;
@@ -138,7 +170,7 @@ const groups: { title: string; items: Embed[] }[] = [
     border-radius: var(--radius);
     background: var(--sand);
   }
-  .reel--ig iframe {
+  .reel--ig :global(iframe) {
     aspect-ratio: 4 / 5.6;
   }
   .reel li:has(.ph) {
@@ -165,6 +197,28 @@ const groups: { title: string; items: Embed[] }[] = [
     height: 40px;
   }
   .ph span {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .embed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    padding: 24px;
+    background: var(--sand);
+  }
+  .embed--ig {
+    aspect-ratio: 4 / 5.6;
+  }
+  .embed :global(svg) {
+    width: 36px;
+    height: 36px;
+  }
+  .embed p {
+    margin: 0;
     color: var(--muted);
     font-size: 0.92rem;
   }

@@ -13,6 +13,28 @@ const SITE_URL =
 export default defineConfig({
   site: SITE_URL,
   trailingSlash: 'always',
+  markdown: { syntaxHighlight: false },
+  // Content-Security-Policy (as a <meta> tag on every page). Astro hashes its own scripts and
+  // styles; everything else is denied unless listed here. Add a host here if you embed something new.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com",
+        "font-src 'self'",
+        "media-src 'self'",
+        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
+        'frame-src https://www.tiktok.com https://www.instagram.com',
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        'upgrade-insecure-requests',
+      ],
+      scriptDirective: {
+        resources: ["'self'", 'https://www.googletagmanager.com'],
+      },
+    },
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/404'),

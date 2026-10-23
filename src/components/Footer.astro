@@ -55,7 +55,10 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div class="wrap legal">
-    <p>© {year} {d.meta.siteName}. {d.footer.rights}</p>
+    <p>
+      © {year} {d.meta.siteName}. {d.footer.rights} · <a href={path('privacy', lang)}>{d.nav.privacy}</a> ·
+      <button type="button" class="linklike" data-consent-open>{d.consent.settings}</button>
+    </p>
     <p class="legal-info">
       {`${legal.name} · ${lang === 'el' ? 'ΑΦΜ' : 'VAT'} ${legal.vat} · ${lang === 'el' ? 'ΔΟΥ' : 'Tax office'} ${legal.taxOffice} · ${legal.address.street[lang]}, ${legal.address.postalCode} ${legal.address.city[lang]}`}
     </p>
@@ -134,6 +137,15 @@ const year = new Date().getFullYear();
   .social :global(svg) {
     width: 20px;
     height: 20px;
+  }
+  .linklike {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: underline;
   }
   .legal p {
     margin: 0 0 6px;

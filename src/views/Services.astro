@@ -30,7 +30,7 @@ const crumbs = [
   schema={[breadcrumbSchema(site, crumbs.map((c) => ({ name: c.name, path: c.href }))), faqSchema(d.faq.items)]}
 >
   <PageHead title={d.services.pageTitle} lead={d.services.pageLead} crumbs={crumbs} />
-  <section class="section" style="padding-top: 24px">
+  <section class="section section--tight">
     <div class="wrap">
       <ServiceCards lang={lang} level="h2" />
     </div>

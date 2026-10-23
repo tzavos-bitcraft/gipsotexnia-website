@@ -48,6 +48,10 @@ const el = {
       title: 'Επικοινωνία | Γυψοτεχνία',
       description: 'Στείλτε μας μήνυμα σε WhatsApp ή Viber ή πάρτε τηλέφωνο. Απαντάμε γρήγορα, η προσφορά είναι δωρεάν και χωρίς υποχρέωση.',
     },
+    privacy: {
+      title: 'Προστασία προσωπικών δεδομένων & cookies | Γυψοτεχνία',
+      description: 'Πώς η ιστοσελίδα της Γυψοτεχνίας χειρίζεται προσωπικά δεδομένα και cookies.',
+    },
     notFound: { title: 'Η σελίδα δεν βρέθηκε | Γυψοτεχνία', description: 'Η σελίδα που ψάχνετε δεν υπάρχει.' },
   },
 
@@ -57,6 +61,7 @@ const el = {
     projects: 'Έργα',
     about: 'Ποιοι είμαστε',
     contact: 'Επικοινωνία',
+    privacy: 'Προστασία δεδομένων',
     menu: 'Μενού',
     close: 'Κλείσιμο',
     skip: 'Μετάβαση στο περιεχόμενο',
@@ -233,6 +238,18 @@ const el = {
     ],
   },
 
+  consent: {
+    title: 'Cookies',
+    text: 'Με τη συγκατάθεσή σας χρησιμοποιούμε cookies για στατιστικά επισκεψιμότητας (Google Analytics) και για να εμφανίζουμε βίντεο από TikTok και Instagram.',
+    accept: 'Αποδοχή',
+    reject: 'Απόρριψη',
+    more: 'Περισσότερα',
+    settings: 'Ρυθμίσεις cookies',
+    embedNote: 'Το βίντεο φορτώνει από το TikTok, που χρησιμοποιεί cookies.',
+    embedNoteIg: 'Η ανάρτηση φορτώνει από το Instagram, που χρησιμοποιεί cookies.',
+    embedLoad: 'Εμφάνιση',
+  },
+
   footer: {
     tagline: 'Επαγγελματικές κατασκευές γυψοσανίδας.',
     pages: 'Σελίδες',
@@ -270,6 +287,10 @@ const en: Dict = {
       title: 'Contact | Gipsotexnia',
       description: 'Message us on WhatsApp or Viber, or give us a call. We reply fast; quotes are free with no obligation.',
     },
+    privacy: {
+      title: 'Privacy & cookies | Gipsotexnia',
+      description: 'How the Gipsotexnia website handles personal data and cookies.',
+    },
     notFound: { title: 'Page not found | Gipsotexnia', description: 'The page you are looking for does not exist.' },
   },
 
@@ -279,6 +300,7 @@ const en: Dict = {
     projects: 'Projects',
     about: 'About',
     contact: 'Contact',
+    privacy: 'Privacy',
     menu: 'Menu',
     close: 'Close',
     skip: 'Skip to content',
@@ -452,6 +474,18 @@ const en: Dict = {
       { title: todo('TO CONFIRM: value 2'), text: todo('TO CONFIRM: in your own words') },
       { title: todo('TO CONFIRM: value 3'), text: todo('TO CONFIRM: in your own words') },
     ],
+  },
+
+  consent: {
+    title: 'Cookies',
+    text: 'With your consent we use cookies for visitor statistics (Google Analytics) and to show videos from TikTok and Instagram.',
+    accept: 'Accept',
+    reject: 'Reject',
+    more: 'Learn more',
+    settings: 'Cookie settings',
+    embedNote: 'This video loads from TikTok, which uses cookies.',
+    embedNoteIg: 'This post loads from Instagram, which uses cookies.',
+    embedLoad: 'Show',
   },
 
   footer: {

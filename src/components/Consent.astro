@@ -1,0 +1,167 @@
+---
+// Cookie consent (GDPR/ePrivacy). Nothing that sets cookies loads before the visitor accepts:
+// - Google Analytics 4 (only if a Measurement ID is set in src/config/site.ts)
+// - TikTok / Instagram embeds (each can also be opened individually with its own button)
+// WhatsApp / Viber / Call clicks are sent to GA as "contact_click" events (method + place).
+import { analytics } from '../config/site';
+import { t } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  /** Show the banner at all (only when there is something that needs consent). */
+  enabled: boolean;
+}
+const { lang, enabled } = Astro.props;
+const c = t(lang).consent;
+---
+
+{
+  enabled && (
+    <div class="consent" id="consent" data-ga={analytics.gaMeasurementId} role="dialog" aria-labelledby="consent-title" aria-live="polite" hidden>
+      <p class="title" id="consent-title">
+        {c.title}
+      </p>
+      <p class="text">
+        {c.text} <a href={path('privacy', lang)}>{c.more}</a>
+      </p>
+      <div class="actions">
+        <button type="button" class="btn btn--sm btn--call" data-consent="denied">
+          {c.reject}
+        </button>
+        <button type="button" class="btn btn--sm btn--primary" data-consent="granted">
+          {c.accept}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const KEY = 'gx-consent-v1';
+  const box = document.getElementById('consent');
+  const gaId = box?.dataset.ga ?? '';
+  const w = window as unknown as { dataLayer: unknown[]; gtag?: (...a: unknown[]) => void };
+
+  const read = () => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  };
+  const write = (v: string) => {
+    try {
+      localStorage.setItem(KEY, v);
+    } catch {
+      /* private mode: choice lasts for this page only */
+    }
+  };
+
+  let started = false;
+  function grant() {
+    document.documentElement.dataset.consent = 'granted';
+    document.dispatchEvent(new CustomEvent('consent:granted'));
+    if (started || !gaId) return;
+    started = true;
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer.push(arguments);
+    };
+    w.gtag('js', new Date());
+    w.gtag('config', gaId);
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;
+    document.head.appendChild(s);
+  }
+
+  function clearGaCookies() {
+    for (const name of document.cookie.split(';').map((c) => c.split('=')[0].trim())) {
+      if (name.startsWith('_ga')) {
+        const host = location.hostname;
+        for (const domain of [host, `.${host}`, `.${host.split('.').slice(-2).join('.')}`]) {
+          document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain}`;
+        }
+        document.cookie = `${name}=; Max-Age=0; path=/`;
+      }
+    }
+  }
+
+  const state = read();
+  if (state === 'granted') grant();
+  else if (!state && box) box.hidden = false;
+
+  box?.addEventListener('click', (e) => {
+    const choice = (e.target as HTMLElement).closest<HTMLElement>('[data-consent]')?.dataset.consent;
+    if (!choice) return;
+    const was = read();
+    write(choice);
+    box.hidden = true;
+    if (choice === 'granted') grant();
+    else if (was === 'granted') {
+      clearGaCookies();
+      location.reload();
+    }
+  });
+
+  // "Cookie settings" link in the footer reopens the banner.
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('[data-consent-open]') && box) {
+      box.hidden = false;
+      box.querySelector<HTMLElement>('[data-consent]')?.focus();
+    }
+  });
+
+  // Conversions: every WhatsApp / Viber / Call button carries data-contact + data-place.
+  document.addEventListener(
+    'click',
+    (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLElement>('[data-contact]');
+      if (a && w.gtag) w.gtag('event', 'contact_click', { method: a.dataset.contact, place: a.dataset.place });
+    },
+    true,
+  );
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 60;
+    max-width: 520px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  .title {
+    font-weight: 800;
+    margin: 0 0 4px;
+  }
+  .text {
+    margin: 0 0 14px;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .actions .btn {
+    flex: 1;
+  }
+  @media (min-width: 560px) {
+    .actions .btn {
+      flex: 0 0 auto;
+    }
+  }
+</style>

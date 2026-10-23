@@ -53,6 +53,15 @@ export const legal = {
   },
 };
 
+/**
+ * Google Analytics 4. Paste the Measurement ID (starts with "G-", found in GA under
+ * Admin → Data streams → Web). It can also be set with the PUBLIC_GA_ID environment variable.
+ * Empty = no analytics. Analytics only loads after the visitor accepts cookies.
+ */
+export const analytics = {
+  gaMeasurementId: (import.meta.env.PUBLIC_GA_ID as string | undefined) || '', // TODO: G-XXXXXXXXXX
+};
+
 export const social = {
   tiktok: 'https://www.tiktok.com/@gipsotexnia',
   tiktokHandle: '@gipsotexnia',
