@@ -100,13 +100,6 @@ export const services: Service[] = [
     },
     faq: [
       {
-        q: { el: 'Ποιος κάνει τα ηλεκτρολογικά για τον φωτισμό;', en: 'Who does the electrical work for the lighting?' },
-        a: {
-          el: todo('ΣΥΜΠΛΗΡΩΣΗ: τα αναλαμβάνετε εσείς ή συνεργάτης ηλεκτρολόγος;'),
-          en: todo('TO CONFIRM: done in-house or by a partner electrician?'),
-        },
-      },
-      {
         q: { el: 'Τι χρώμα φωτός να διαλέξω;', en: 'Which light colour should I choose?' },
         a: {
           el: 'Για σπίτια προτιμάται συνήθως θερμό λευκό (περίπου 3000K), όπως στη σύνθεση τοίχου στις φωτογραφίες μας. Για κουζίνες και γραφεία ταιριάζει πιο ουδέτερο λευκό.',
@@ -287,13 +280,6 @@ export const services: Service[] = [
       en: ['Offices and meeting rooms', 'Shops and displays', 'Cafés and restaurants', 'Practices and clinics'],
     },
     faq: [
-      {
-        q: { el: 'Δουλεύετε και εκτός ωραρίου καταστημάτων;', en: 'Can you work outside opening hours?' },
-        a: {
-          el: todo('ΣΥΜΠΛΗΡΩΣΗ: ναι/όχι και πώς'),
-          en: todo('TO CONFIRM: yes/no and how'),
-        },
-      },
       {
         q: { el: 'Τι είναι η ηχοαπορροφητική οροφή;', en: 'What is an acoustic ceiling?' },
         a: {

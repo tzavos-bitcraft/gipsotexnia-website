@@ -212,22 +212,26 @@ Visible on the site as yellow ⟦ΣΥΜΠΛΗΡΩΣΗ⟧ / ⟦TO CONFIRM⟧ boxe
 | # | Item | Where |
 | --- | --- | --- |
 | 1 | Final domain (gipsotexnia.gr is taken) | Vercel settings + `SITE_URL` (`astro.config.mjs`) |
-| 2 | Confirm 699 566 7463 is right for calls, WhatsApp **and** Viber | `src/config/site.ts` |
-| 3 | Business hours | `src/config/site.ts` → `hours` |
-| 4 | Years in business | `src/config/site.ts` → `yearsExperience` |
-| 5 | Number of completed projects | `src/config/site.ts` → `projectsCompleted` |
-| 6 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
-| 7 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
-| 8 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
-| 9 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
-| 10 | Who does the lighting electrics | `src/data/services.ts` → lighting FAQ |
-| 11 | Commercial work: do they work outside opening hours? | `src/data/services.ts` → commercial FAQ |
-| 12 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
-| 13 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
-| 14 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
-| 15 | Opt-in for Google Analytics (+ which Gmail gets access); approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
-| 16 | Team / owner photo (strongest trust signal, currently missing) | new photo → `media-and-logos/` |
-| 17 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
+| 2 | Business hours | `src/config/site.ts` → `hours` |
+| 3 | Years in business | `src/config/site.ts` → `yearsExperience` |
+| 4 | Number of completed projects | `src/config/site.ts` → `projectsCompleted` |
+| 5 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
+| 6 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
+| 7 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
+| 8 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
+| 9 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
+| 10 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
+| 11 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
+| 12 | Opt-in for Google Analytics; approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
+| 13 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
+
+### Not needed (removed from the client checklist)
+
+Phone check (calls/WhatsApp/Viber) · confirming the «Άμεση απάντηση» line · whether the Kaisariani
+address is public (it stays in the footer as legal info) · clean-work / on-time claims (kept on the site)
+· materials, certifications, warranty, languages · who does the lighting electrics · work outside shop
+hours · how often they post · team/owner photo · which Gmail gets GA access. Don't re-add these
+to the site as ⟦placeholders⟧.
 
 ---
 
