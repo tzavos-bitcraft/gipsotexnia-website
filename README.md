@@ -64,8 +64,8 @@ built from these values. The prefilled WhatsApp messages (Greek/English) are in 
 Legal details (name, ΑΦΜ, ΔΟΥ, address) are in `legal` in the same file. They're shown in the
 footer and in the structured data.
 
-Business facts (`areaServed`, `hours`, `yearsExperience`, `projectsCompleted`, `replyTime`) are
-`null` until the client confirms them. While `null`, the site shows a ⟦placeholder⟧ and leaves
+Business facts: `areaServed` ("Σε όλη την Αττική"; Google gets Αθήνα + Αττική) and `replyTime`
+("Άμεση απάντηση") are set. `hours`, `yearsExperience` and `projectsCompleted` stay `null` until the client confirms them. While `null`, the site shows a ⟦placeholder⟧ and leaves
 the fact out of the structured data. Fill one in, for example `yearsExperience: 12`, and it appears everywhere.
 
 Where the other text lives:
@@ -213,26 +213,21 @@ Visible on the site as yellow ⟦ΣΥΜΠΛΗΡΩΣΗ⟧ / ⟦TO CONFIRM⟧ boxe
 | --- | --- | --- |
 | 1 | Final domain (gipsotexnia.gr is taken) | Vercel settings + `SITE_URL` (`astro.config.mjs`) |
 | 2 | Confirm 699 566 7463 is right for calls, WhatsApp **and** Viber | `src/config/site.ts` |
-| 3 | Service area(s) | `src/config/site.ts` → `areaServed` |
-| 4 | Business hours | `src/config/site.ts` → `hours` |
-| 5 | Years in business | `src/config/site.ts` → `yearsExperience` |
-| 6 | Number of completed projects | `src/config/site.ts` → `projectsCompleted` |
-| 7 | Typical reply time | `src/config/site.ts` → `replyTime` |
-| 8 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
-| 9 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
-| 10 | Confirm "Clean work" and "On time" claims (badged "Προς επιβεβαίωση") | `src/i18n/ui.ts` → `why.items` (remove `confirm: true`) |
-| 11 | Free site visit? | `src/i18n/ui.ts` → `steps` |
-| 12 | Handed over ready to paint or painted? | `src/i18n/ui.ts` → `steps` |
-| 13 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
-| 14 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
-| 15 | Who does the lighting electrics | `src/data/services.ts` → lighting FAQ |
-| 16 | Commercial work: do they work outside opening hours? | `src/data/services.ts` → commercial FAQ |
-| 17 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
-| 18 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
-| 19 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
-| 22 | Opt-in for Google Analytics (+ which Gmail gets access); approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
-| 20 | Team / owner photo (strongest trust signal, currently missing) | new photo → `media-and-logos/` |
-| 21 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
+| 3 | Business hours | `src/config/site.ts` → `hours` |
+| 4 | Years in business | `src/config/site.ts` → `yearsExperience` |
+| 5 | Number of completed projects | `src/config/site.ts` → `projectsCompleted` |
+| 6 | Company story (About page) | `src/i18n/ui.ts` → `about.story` |
+| 7 | Three company values (About page) | `src/i18n/ui.ts` → `about.values` |
+| 8 | Indicative prices (general + ceilings per m²) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → ceilings FAQ |
+| 9 | Typical duration (rooms, wall units) | `src/i18n/ui.ts` → `faq`; `src/data/services.ts` → wall-units FAQ |
+| 10 | Who does the lighting electrics | `src/data/services.ts` → lighting FAQ |
+| 11 | Commercial work: do they work outside opening hours? | `src/data/services.ts` → commercial FAQ |
+| 12 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
+| 13 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
+| 14 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
+| 15 | Opt-in for Google Analytics (+ which Gmail gets access); approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
+| 16 | Team / owner photo (strongest trust signal, currently missing) | new photo → `media-and-logos/` |
+| 17 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
 
 ---
 

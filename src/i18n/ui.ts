@@ -17,8 +17,8 @@ const area = {
   en: business.areaServed?.en ?? todo('TO CONFIRM: areas'),
 };
 const reply = {
-  el: business.replyTime?.el ?? todo('ΣΥΜΠΛΗΡΩΣΗ: χρόνος'),
-  en: business.replyTime?.en ?? todo('TO CONFIRM: time'),
+  el: business.replyTime?.el ?? `Απάντηση ${todo('ΣΥΜΠΛΗΡΩΣΗ: χρόνος')}`,
+  en: business.replyTime?.en ?? `Reply ${todo('TO CONFIRM: time')}`,
 };
 const yearsV = v(years === null ? null : `${years}+`, 'χρόνια', 'years');
 const projectsV = v(projects === null ? null : `${projects}+`, 'αριθμός', 'number');
@@ -78,7 +78,7 @@ const el = {
     viberLong: 'Μήνυμα στο Viber',
     callLong: 'Τηλεφωνήστε μας',
     reassure: 'Στείλτε μας μήνυμα, απαντάμε γρήγορα',
-    reassureSub: `Δωρεάν προσφορά · Χωρίς υποχρέωση · Απάντηση ${reply.el}`,
+    reassureSub: `Δωρεάν προσφορά · Χωρίς υποχρέωση · ${reply.el}`,
     photoTip: 'Tip: στείλτε μας μια φωτογραφία του χώρου, βοηθάει να σας απαντήσουμε πιο γρήγορα.',
     floatingOpen: 'Επικοινωνία',
     floatingTitle: 'Μιλήστε μαζί μας',
@@ -158,14 +158,13 @@ const el = {
 
   why: {
     title: 'Γιατί να μας εμπιστευτείτε',
-    // Items marked confirm: true show a "to confirm" badge until the client approves them.
     items: [
       { icon: 'chat', title: 'Απαντάμε γρήγορα', text: 'Στείλτε μήνυμα σε WhatsApp ή Viber όποτε σας βολεύει. Δεν θα περιμένετε μέρες για μια απάντηση.' },
       { icon: 'tag', title: 'Δωρεάν προσφορά', text: 'Ρωτήστε ό,τι θέλετε. Η προσφορά είναι δωρεάν και δεν σας δεσμεύει σε τίποτα.' },
       { icon: 'ruler', title: 'Στα μέτρα σας', text: 'Σχεδιάζουμε, κατασκευάζουμε και τοποθετούμε κάθε κατασκευή ειδικά για τον δικό σας χώρο.' },
       { icon: 'eye', title: 'Δείτε πρώτα τη δουλειά μας', text: 'Πραγματικές φωτογραφίες και βίντεο από τα έργα μας, εδώ και στο TikTok.' },
-      { icon: 'broom', title: 'Καθαρή δουλειά', text: 'Προστατεύουμε δάπεδα και έπιπλα και μαζεύουμε πριν φύγουμε.', confirm: true },
-      { icon: 'clock', title: 'Στην ώρα μας', text: 'Λέμε πότε θα τελειώσουμε και το τηρούμε.', confirm: true },
+      { icon: 'broom', title: 'Καθαρή δουλειά', text: 'Προστατεύουμε δάπεδα και έπιπλα και μαζεύουμε πριν φύγουμε.' },
+      { icon: 'clock', title: 'Στην ώρα μας', text: 'Λέμε πότε θα τελειώσουμε και το τηρούμε.' },
     ],
   },
 
@@ -174,9 +173,9 @@ const el = {
     lead: 'Απλά, χωρίς γραφειοκρατία.',
     items: [
       { title: 'Στείλτε μήνυμα', text: 'Σε WhatsApp ή Viber, με λίγα λόγια και, αν θέλετε, μια φωτογραφία του χώρου.' },
-      { title: 'Τα λέμε από κοντά', text: `Συζητάμε την ιδέα σας και παίρνουμε μέτρα. ${todo('ΣΥΜΠΛΗΡΩΣΗ: δωρεάν αυτοψία;')}` },
+      { title: 'Τα λέμε από κοντά', text: 'Συζητάμε την ιδέα σας και παίρνουμε μέτρα.' },
       { title: 'Παίρνετε προσφορά', text: 'Δωρεάν και χωρίς υποχρέωση. Αποφασίζετε με την ησυχία σας.' },
-      { title: 'Φτιάχνουμε & παραδίδουμε', text: `Κατασκευάζουμε και τοποθετούμε. ${todo('ΣΥΜΠΛΗΡΩΣΗ: παράδοση έτοιμο για βάψιμο ή βαμμένο;')}` },
+      { title: 'Φτιάχνουμε & παραδίδουμε', text: 'Κατασκευάζουμε, τοποθετούμε και παραδίδουμε έτοιμο για βάψιμο ή βαμμένο, όπως προτιμάτε.' },
     ],
   },
 
@@ -321,7 +320,7 @@ const en: Dict = {
     viberLong: 'Message us on Viber',
     callLong: 'Give us a call',
     reassure: 'Send us a message, we reply fast',
-    reassureSub: `Free quote · No obligation · Reply ${reply.en}`,
+    reassureSub: `Free quote · No obligation · ${reply.en}`,
     photoTip: 'Tip: send us a photo of the space, it helps us reply faster.',
     floatingOpen: 'Contact',
     floatingTitle: 'Talk to us',
@@ -406,8 +405,8 @@ const en: Dict = {
       { icon: 'tag', title: 'Free quote', text: 'Ask anything. The quote is free and there’s no obligation.' },
       { icon: 'ruler', title: 'Made to measure', text: 'We design, build and install every piece specifically for your space.' },
       { icon: 'eye', title: 'See our work first', text: 'Real photos and videos of our projects, here and on TikTok.' },
-      { icon: 'broom', title: 'Clean work', text: 'We protect floors and furniture and tidy up before we leave.', confirm: true },
-      { icon: 'clock', title: 'On time', text: 'We tell you when we’ll finish and we stick to it.', confirm: true },
+      { icon: 'broom', title: 'Clean work', text: 'We protect floors and furniture and tidy up before we leave.' },
+      { icon: 'clock', title: 'On time', text: 'We tell you when we’ll finish and we stick to it.' },
     ],
   },
 
@@ -416,9 +415,9 @@ const en: Dict = {
     lead: 'Simple, no paperwork maze.',
     items: [
       { title: 'Send a message', text: 'On WhatsApp or Viber, with a few words and, if you like, a photo of the space.' },
-      { title: 'We talk it through', text: `We discuss your idea and take measurements. ${todo('TO CONFIRM: free site visit?')}` },
+      { title: 'We talk it through', text: 'We discuss your idea and take measurements.' },
       { title: 'You get a quote', text: 'Free and with no obligation. Decide in your own time.' },
-      { title: 'We build & hand over', text: `We build and install. ${todo('TO CONFIRM: handed over ready to paint, or painted?')}` },
+      { title: 'We build & hand over', text: 'We build, install and hand over ready to paint, or painted, as you prefer.' },
     ],
   },
 

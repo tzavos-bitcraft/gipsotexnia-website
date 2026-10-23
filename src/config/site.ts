@@ -23,16 +23,20 @@ export const business = {
   nameLatin: 'Gipsotexnia',
   /** Tagline from the company van. */
   tagline: { el: 'Επαγγελματικές Κατασκευές Γυψοσανίδας', en: 'Professional Plasterboard Construction' },
-  // TODO-CLIENT: service area, e.g. { el: 'Αθήνα & Αττική', en: 'Athens & Attica' }
-  areaServed: null as null | { el: string; en: string },
+  /** Shown on the site; `schema` = place names given to Google/AI as service areas. */
+  areaServed: { el: 'Σε όλη την Αττική', en: 'All of Attica', schema: ['Αθήνα', 'Αττική'] } as null | {
+    el: string;
+    en: string;
+    schema: string[];
+  },
   // TODO-CLIENT: hours, e.g. { el: 'Δευτέρα – Σάββατο, 08:00 – 20:00', en: '…', schema: ['Mo-Sa 08:00-20:00'] }
   hours: null as null | { el: string; en: string; schema: string[] },
   // TODO-CLIENT: years in business (number), e.g. 12
   yearsExperience: null as null | number,
   // TODO-CLIENT: completed projects (number), e.g. 300
   projectsCompleted: null as null | number,
-  // TODO-CLIENT: typical reply time, e.g. { el: 'μέσα σε 1 ώρα', en: 'within 1 hour' }
-  replyTime: null as null | { el: string; en: string },
+  /** Reply promise shown under the contact buttons. */
+  replyTime: { el: 'Άμεση απάντηση', en: 'Quick reply' } as null | { el: string; en: string },
 };
 
 /** Legal details (from the tax registry). Shown in the footer and in Google's structured data. */

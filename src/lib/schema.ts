@@ -34,7 +34,9 @@ export function businessSchema(site: URL, lang: Lang) {
     },
     telephone: contact.phone,
     ...(contact.email && { email: contact.email }),
-    ...(business.areaServed && { areaServed: business.areaServed[lang] }),
+    ...(business.areaServed && {
+      areaServed: business.areaServed.schema.map((name) => ({ '@type': 'AdministrativeArea', name })),
+    }),
     ...(business.hours && { openingHours: business.hours.schema }),
     ...(business.yearsExperience && {
       foundingDate: String(new Date().getFullYear() - business.yearsExperience),
@@ -82,7 +84,9 @@ export function serviceSchema(site: URL, s: Service, lang: Lang) {
     description: plain(s.intro[lang][0]),
     url: abs(site, servicePath(s.key, lang)),
     provider: { '@id': abs(site, '/#business') },
-    ...(business.areaServed && { areaServed: business.areaServed[lang] }),
+    ...(business.areaServed && {
+      areaServed: business.areaServed.schema.map((name) => ({ '@type': 'AdministrativeArea', name })),
+    }),
   };
 }
 

@@ -15,7 +15,7 @@ interface Props {
 const { lang } = Astro.props;
 const d = t(lang);
 const pages: PageKey[] = ['home', 'services', 'projects', 'about', 'contact'];
-const area = business.areaServed?.[lang] ?? todo(lang === 'el' ? 'ΣΥΜΠΛΗΡΩΣΗ: περιοχές' : 'TO CONFIRM: areas');
+const area = business.areaServed?.[lang] ?? todo(lang === 'el' ? 'Αθήνα' : 'TO CONFIRM: areas');
 const hours = business.hours?.[lang] ?? todo(lang === 'el' ? 'ΣΥΜΠΛΗΡΩΣΗ: ωράριο' : 'TO CONFIRM: hours');
 const year = new Date().getFullYear();
 ---
@@ -74,6 +74,7 @@ const year = new Date().getFullYear();
     color: #dfe7e4;
     padding: 56px 0 120px;
     font-size: 0.98rem;
+    text-align: center;
   }
   .cols {
     display: grid;
@@ -89,7 +90,7 @@ const year = new Date().getFullYear();
     border-radius: 14px;
     padding: 10px 14px;
     width: 200px;
-    margin-bottom: 16px;
+    margin: 0 auto 16px;
   }
   h2 {
     font-size: 0.85rem;
@@ -117,6 +118,7 @@ const year = new Date().getFullYear();
     display: flex;
     gap: 10px;
     align-items: flex-start;
+    justify-content: center;
   }
   .contact :global(svg) {
     width: 18px;
@@ -128,6 +130,7 @@ const year = new Date().getFullYear();
   .social {
     display: flex;
     gap: 10px;
+    justify-content: center;
   }
   .social a {
     display: grid;
