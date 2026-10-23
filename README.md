@@ -82,31 +82,37 @@ Where the other text lives:
 
 ## 3. Update the TikTok & Instagram posts
 
-TikTok has no simple public API for pinned videos, so the posts are chosen by hand in
-**[`content/social.json`](content/social.json)**:
+No API keys or account access are needed: everything uses TikTok's and Instagram's official
+embeds of the (public) accounts. It is configured in **[`content/social.json`](content/social.json)**:
 
 ```json
 {
   "tiktok": {
-    "featured": ["https://www.tiktok.com/@gipsotexnia/video/7412345678901234567", "…"],
-    "latest":   ["https://www.tiktok.com/@gipsotexnia/video/7419876543210987654", "…"]
+    "featured": ["https://www.tiktok.com/@gipsotexnia/video/7690990014183820566", "…"],
+    "latest": []
   },
-  "instagram": {
-    "posts": ["https://www.instagram.com/p/C1AbCdEfGhI/", "…"]
-  }
+  "instagram": { "posts": [] }
 }
 ```
 
-1. On TikTok, open the video, then **Share → Copy link**. Use the full
-   `tiktok.com/@gipsotexnia/video/…` URL; on a phone, open short `vm.tiktok.com` links in a
-   browser first to get the full one.
-2. Instagram: open the post, then **⋯ → Copy link** (`/p/…` and `/reel/…` both work).
-3. Paste into the matching list. Order is display order. Any number of items works (3 looks best).
-4. Rebuild/redeploy. On Vercel, committing the change is enough.
+| Section on the site | Source | Updates |
+| --- | --- | --- |
+| **Ξεχωριστά βίντεο** (featured) | the video URLs in `tiktok.featured`. These are currently the 3 videos pinned on their profile. | by hand |
+| **Πρόσφατα** (latest TikTok) | `tiktok.latest` empty → official TikTok **creator embed** (profile card + newest videos) | **automatic** |
+| **Instagram** | `instagram.posts` empty → official Instagram **profile embed** (newest 6 posts) | **automatic** |
 
-Embeds use TikTok's and Instagram's official embed players as `loading="lazy"` iframes. Nothing
-loads until the visitor scrolls near them. Entries that aren't real URLs yet (the current
-`TODO-CLIENT` ones) show a friendly "follow us" card instead.
+To hand-pick posts instead, put full post URLs in `latest` / `posts`. Use **Share → Copy link**;
+on a phone, open short `vm.tiktok.com` links in a browser first to get the full URL.
+
+To change the featured videos:
+1. Paste the video URLs into `tiktok.featured`.
+2. Run `npm run fetch-social`. It downloads each video's thumbnail through TikTok's public oEmbed
+   into `src/assets/social/`. If TikTok answers `429` (rate limit), try again later or from another network.
+3. Commit and push. Vercel redeploys.
+
+**Cookies:** embeds set third-party cookies, so nothing from TikTok/Instagram loads before consent.
+Featured videos show their thumbnail with a play button and load the real player when tapped.
+After "Αποδοχή" on the cookie banner, the profile embeds load automatically.
 
 ---
 
@@ -159,13 +165,13 @@ Rankings and AI mentions for a local trade mostly depend on things outside the c
    environment variable `PUBLIC_GA_ID`, then redeploy.
 
 How it behaves (GDPR/ePrivacy, required in Greece/EU):
-- With an ID set, a small GR/EN cookie banner appears with equal "Αποδοχή / Απόρριψη" buttons.
-  **GA loads only after "Accept".** The choice is stored in the browser, and visitors can change it any time
+- A small GR/EN cookie banner (equal "Αποδοχή / Απόρριψη" buttons) handles consent. It is
+  always active, because the TikTok/Instagram embeds need consent too, and its text mentions
+  analytics only when a GA ID is set. **GA loads only after "Accept".** The choice is stored in the browser, and visitors can change it any time
   via "Ρυθμίσεις cookies" in the footer. Rejecting after accepting removes the `_ga` cookies.
 - Every WhatsApp / Viber / Call button sends a GA4 event **`contact_click`** with `method`
   (`whatsapp`/`viber`/`call`) and `place` (`hero`, `floating`, `header`, `service-…`, …). In GA, mark
   `contact_click` as a **key event** (Admin → Events) to count leads.
-- TikTok/Instagram embeds also set cookies, so they load only after consent, or when the visitor presses "Show" on one.
 - The privacy & cookies page (`/prostasia-dedomenon/`, `/en/privacy/`) describes exactly this. Have it reviewed
   by the client before go-live.
 
@@ -224,9 +230,9 @@ Visible on the site as yellow ⟦ΣΥΜΠΛΗΡΩΣΗ⟧ / ⟦TO CONFIRM⟧ boxe
 | 17 | Whether to keep andrywallconstruction@gmail.com or create a new address | `src/config/site.ts` → `contact.email` |
 | 18 | What exactly was built in the two villa living-room photos (for better captions) | `src/data/photos.ts` |
 | 19 | Real testimonials (client is collecting them) | `src/data/testimonials.ts` (set `placeholder: false`) |
-| 20 | TikTok featured/latest + Instagram post links | `content/social.json` |
-| 21 | Team / owner photo (strongest trust signal, currently missing) | new photo → `media-and-logos/` |
-| 22 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
+| 22 | Opt-in for Google Analytics (+ which Gmail gets access); approve the cookie banner + privacy text | `PUBLIC_GA_ID`, `src/views/Privacy.astro` |
+| 20 | Team / owner photo (strongest trust signal, currently missing) | new photo → `media-and-logos/` |
+| 21 | Logo source file (SVG/AI/PDF) to replace the raster logo | `src/assets/brand/` |
 
 ---
 

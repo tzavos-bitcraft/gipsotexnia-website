@@ -1,10 +1,12 @@
 ---
-// TikTok (featured + latest) and Instagram, driven by content/social.json.
-// Embeds are iframes with loading="lazy": nothing loads until the visitor scrolls near them.
+// TikTok + Instagram, driven by content/social.json (see src/lib/social.ts).
+// Embeds set third-party cookies, so each one shows a preview first and loads the real
+// player only after cookie consent, or when the visitor presses it.
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { social } from '../config/site';
 import { t } from '../i18n/ui';
-import { tiktokFeatured, tiktokLatest, instagramPosts, type Embed } from '../lib/social';
+import { tiktokFeatured, tiktokLatest, tiktokProfileEmbed, instagramPosts, instagramProfileEmbed } from '../lib/social';
 import type { Lang } from '../i18n/routes';
 
 interface Props {
@@ -14,10 +16,6 @@ const { lang } = Astro.props;
 const tk = t(lang).tiktok;
 const ig = t(lang).instagram;
 const cs = t(lang).consent;
-const groups: { title: string; items: Embed[] }[] = [
-  { title: tk.featured, items: tiktokFeatured },
-  { title: tk.latest, items: tiktokLatest },
-];
 ---
 
 <section class="section section--white social" id="tiktok">
@@ -33,31 +31,57 @@ const groups: { title: string; items: Embed[] }[] = [
     </div>
 
     {
-      groups.map((g) => (
+      tiktokFeatured.length > 0 && (
         <div class="group">
-          <h3>{g.title}</h3>
+          <h3>{tk.featured}</h3>
           <ul class="reel">
-            {g.items.map((e) => (
+            {tiktokFeatured.map((v, i) => (
               <li>
-                {e.embed ? (
-                  <div class="embed" data-embed={e.embed} data-title={tk.embedTitle}>
-                    <Icon name="tiktok" />
-                    <p>{cs.embedNote}</p>
-                    <button type="button" class="btn btn--sm btn--tiktok">{cs.embedLoad}</button>
-                  </div>
-                ) : (
-                  <a class="ph" href={social.tiktok} target="_blank" rel="noopener">
-                    <Icon name="tiktok" />
-                    <strong>{tk.placeholder}</strong>
-                    <span>{tk.placeholderSub}</span>
-                  </a>
-                )}
+                <button type="button" class="video-facade" data-embed={v.embed} data-title={v.title || `${tk.embedTitle} ${i + 1}`} data-kind="video" aria-label={`${tk.play} ${i + 1}`}>
+                  {v.thumb ? (
+                    <Image src={v.thumb} alt="" widths={[300, 480]} sizes="300px" class="thumb" />
+                  ) : (
+                    <Icon name="tiktok" class="thumb-icon" />
+                  )}
+                  <span class="play" aria-hidden="true">
+                    <Icon name="play" />
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
+          <p class="note">{cs.embedNote}</p>
         </div>
-      ))
+      )
     }
+
+    <div class="group">
+      <h3>{tk.latest}</h3>
+      {
+        tiktokLatest.length > 0 ? (
+          <ul class="reel">
+            {tiktokLatest.map((v, i) => (
+              <li>
+                <button type="button" class="video-facade" data-embed={v.embed} data-title={`${tk.embedTitle} ${i + 1}`} data-kind="video" aria-label={`${tk.play} ${i + 1}`}>
+                  {v.thumb ? <Image src={v.thumb} alt="" widths={[300, 480]} sizes="300px" class="thumb" /> : <Icon name="tiktok" class="thumb-icon" />}
+                  <span class="play" aria-hidden="true">
+                    <Icon name="play" />
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="profile-facade profile-facade--tiktok" data-embed={tiktokProfileEmbed} data-title={tk.latestCard} data-kind="tiktok-profile">
+            <Icon name="tiktok" />
+            <strong>{tk.latestCard}</strong>
+            <span>{social.tiktokHandle}</span>
+            <button type="button" class="btn btn--sm btn--tiktok">{cs.embedLoad}</button>
+            <p class="note">{cs.embedNote}</p>
+          </div>
+        )
+      }
+    </div>
 
     <div class="section-head section-head--center ig-head" id="instagram">
       <span class="eyebrow">{social.instagramHandle}</span>
@@ -68,49 +92,56 @@ const groups: { title: string; items: Embed[] }[] = [
         {ig.follow}
       </a>
     </div>
-    <ul class="reel reel--ig">
-      {
-        instagramPosts.map((e) => (
-          <li>
-            {e.embed ? (
-              <div class="embed embed--ig" data-embed={e.embed} data-title={ig.embedTitle}>
+    {
+      instagramPosts.length > 0 ? (
+        <ul class="reel">
+          {instagramPosts.map((u) => (
+            <li>
+              <div class="profile-facade" data-embed={u} data-title={ig.embedTitle} data-kind="ig-post">
                 <Icon name="instagram" />
-                <p>{cs.embedNoteIg}</p>
                 <button type="button" class="btn btn--sm btn--ig">{cs.embedLoad}</button>
+                <p class="note">{cs.embedNoteIg}</p>
               </div>
-            ) : (
-              <a class="ph ph--ig" href={social.instagram} target="_blank" rel="noopener">
-                <Icon name="instagram" />
-                <strong>{ig.placeholder}</strong>
-                <span>{social.instagramHandle}</span>
-              </a>
-            )}
-          </li>
-        ))
-      }
-    </ul>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        instagramProfileEmbed && (
+          <div class="profile-facade profile-facade--ig" data-embed={instagramProfileEmbed} data-title={ig.latestCard} data-kind="ig-profile">
+            <Icon name="instagram" />
+            <strong>{ig.latestCard}</strong>
+            <span>{social.instagramHandle}</span>
+            <button type="button" class="btn btn--sm btn--ig">{cs.embedLoad}</button>
+            <p class="note">{cs.embedNoteIg}</p>
+          </div>
+        )
+      )
+    }
   </div>
 </section>
 
 <script>
-  // Embeds set third-party cookies, so they load only after consent or when the visitor
-  // presses "Show" on one. Loaded iframes are lazy, so off-screen ones wait until scrolled to.
-  const load = (el: HTMLElement) => {
+  // Swap a preview for the real embed (after consent, or when the visitor presses it).
+  const load = (el: HTMLElement, autoplay = false) => {
     const f = document.createElement('iframe');
-    f.src = el.dataset.embed!;
+    // A press on a video preview starts that video.
+    f.src = el.dataset.embed! + (autoplay && el.dataset.kind === 'video' ? '&autoplay=1' : '');
     f.title = el.dataset.title ?? '';
     f.loading = 'lazy';
-    f.allow = 'encrypted-media; fullscreen; picture-in-picture';
+    f.allow = 'encrypted-media; fullscreen; picture-in-picture' + (el.dataset.kind === 'video' ? '; autoplay' : '');
     f.allowFullscreen = true;
-    if (el.classList.contains('embed--ig')) f.className = 'ig';
+    f.className = `embed embed--${el.dataset.kind}`;
     el.replaceWith(f);
   };
-  const loadAll = () => document.querySelectorAll<HTMLElement>('[data-embed]').forEach(load);
+  // After consent, profile/post embeds load by themselves. Single videos keep their thumbnail
+  // and become the player when pressed (lighter on phones, and it starts playing right away).
+  const loadAll = () => document.querySelectorAll<HTMLElement>('.social [data-embed]:not([data-kind="video"])').forEach((el) => load(el));
   if (document.documentElement.dataset.consent === 'granted') loadAll();
   document.addEventListener('consent:granted', loadAll);
-  document.addEventListener('click', (e) => {
-    const el = (e.target as HTMLElement).closest<HTMLElement>('[data-embed]');
-    if (el && (e.target as HTMLElement).closest('button')) load(el);
+  document.querySelector('.social')?.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const el = target.closest<HTMLElement>('[data-embed]');
+    if (el && (el.tagName === 'BUTTON' || target.closest('button'))) load(el, true);
   });
 </script>
 
@@ -140,10 +171,16 @@ const groups: { title: string; items: Embed[] }[] = [
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+  .note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 4px 0 0;
+  }
   .reel {
     list-style: none;
     margin: 0;
-    padding: 4px 4px 16px;
+    padding: 4px 4px 12px;
     display: flex;
     gap: 16px;
     overflow-x: auto;
@@ -157,70 +194,114 @@ const groups: { title: string; items: Embed[] }[] = [
     }
   }
   .reel li {
-    flex: 0 0 min(300px, 78vw);
+    flex: 0 0 min(300px, 76vw);
     scroll-snap-align: center;
   }
-  .reel :global(iframe),
-  .embed,
-  .ph {
+
+  /* Video preview: real thumbnail + play button. */
+  .video-facade {
+    position: relative;
     display: block;
     width: 100%;
     aspect-ratio: 9 / 16;
+    padding: 0;
     border: 0;
     border-radius: var(--radius);
-    background: var(--sand);
+    overflow: hidden;
+    background: var(--ink);
+    cursor: pointer;
+    box-shadow: var(--shadow);
   }
-  .reel--ig :global(iframe) {
-    aspect-ratio: 4 / 5.6;
+  .video-facade :global(.thumb) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
   }
-  .reel li:has(.ph) {
-    flex-basis: min(220px, 60vw);
+  .video-facade:hover :global(.thumb) {
+    transform: scale(1.03);
   }
-  .ph {
-    aspect-ratio: 3 / 4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-align: center;
-    padding: 24px;
+  .video-facade :global(.thumb-icon) {
+    width: 48px;
+    height: 48px;
+    margin: auto;
+    color: #fff;
+  }
+  .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 68px;
+    height: 68px;
+    margin: -34px 0 0 -34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.92);
     color: var(--ink);
-    text-decoration: none;
-    background:
-      linear-gradient(160deg, rgb(69 185 138 / 0.18), rgb(40 150 196 / 0.14)),
-      var(--sand);
-    border: 2px dashed var(--line);
+    box-shadow: var(--shadow-lg);
   }
-  .ph :global(svg) {
-    width: 40px;
-    height: 40px;
+  .play :global(svg) {
+    width: 28px;
+    height: 28px;
+    margin-left: 4px;
   }
-  .ph span {
-    color: var(--muted);
-    font-size: 0.92rem;
-  }
-  .embed {
+
+  /* Profile previews (latest videos / Instagram grid). */
+  .profile-facade {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
     text-align: center;
-    padding: 24px;
+    padding: 28px 20px;
+    max-width: 600px;
+    min-height: 260px;
+    margin-inline: auto;
+    border-radius: var(--radius);
+    background:
+      linear-gradient(160deg, rgb(69 185 138 / 0.16), rgb(40 150 196 / 0.12)),
+      var(--sand);
+  }
+  .profile-facade :global(svg) {
+    width: 40px;
+    height: 40px;
+  }
+  .profile-facade strong {
+    font-size: 1.15rem;
+  }
+  .profile-facade span {
+    color: var(--muted);
+  }
+  .reel .profile-facade {
+    aspect-ratio: 4 / 5.6;
+    min-height: 0;
+  }
+
+  /* Loaded embeds */
+  .social :global(iframe.embed) {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: var(--radius);
     background: var(--sand);
   }
-  .embed--ig {
+  .social :global(iframe.embed--video) {
+    aspect-ratio: 9 / 16;
+  }
+  .social :global(iframe.embed--tiktok-profile) {
+    max-width: 640px;
+    height: 500px;
+    margin-inline: auto;
+  }
+  .social :global(iframe.embed--ig-profile) {
+    max-width: 540px;
+    aspect-ratio: 1 / 1.05;
+    margin-inline: auto;
+  }
+  .social :global(iframe.embed--ig-post) {
     aspect-ratio: 4 / 5.6;
-  }
-  .embed :global(svg) {
-    width: 36px;
-    height: 36px;
-  }
-  .embed p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.92rem;
   }
   .ig-head {
     margin-top: clamp(48px, 7vw, 88px);

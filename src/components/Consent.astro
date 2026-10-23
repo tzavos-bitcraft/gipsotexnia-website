@@ -23,7 +23,7 @@ const c = t(lang).consent;
         {c.title}
       </p>
       <p class="text">
-        {c.text} <a href={path('privacy', lang)}>{c.more}</a>
+        {analytics.gaMeasurementId ? c.text : c.textNoGa} <a href={path('privacy', lang)}>{c.more}</a>
       </p>
       <div class="actions">
         <button type="button" class="btn btn--sm btn--call" data-consent="denied">

@@ -1,22 +1,14 @@
 {
-  "_help": "Paste full TikTok / Instagram post URLs below. 'featured' shows first (large), 'latest' below it. Order = display order. See README → 'Updating TikTok & Instagram posts'.",
+  "_help": "TikTok 'featured' = videos shown large (paste full video URLs, then run `npm run fetch-social` for their thumbnails). 'latest' and Instagram 'posts' can stay EMPTY: the site then shows the official profile embeds, which always display the newest posts automatically. Fill them only to hand-pick specific posts. See README → 'Updating TikTok & Instagram posts'.",
   "tiktok": {
     "featured": [
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000001",
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000002",
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000003"
+      "https://www.tiktok.com/@gipsotexnia/video/7690990014183820566",
+      "https://www.tiktok.com/@gipsotexnia/video/7617786898823515414",
+      "https://www.tiktok.com/@gipsotexnia/video/7636718873923915030"
     ],
-    "latest": [
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000004",
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000005",
-      "TODO-CLIENT: https://www.tiktok.com/@gipsotexnia/video/0000000000000000006"
-    ]
+    "latest": []
   },
   "instagram": {
-    "posts": [
-      "TODO-CLIENT: https://www.instagram.com/p/XXXXXXXXXXX/",
-      "TODO-CLIENT: https://www.instagram.com/p/YYYYYYYYYYY/",
-      "TODO-CLIENT: https://www.instagram.com/p/ZZZZZZZZZZZ/"
-    ]
+    "posts": []
   }
 }

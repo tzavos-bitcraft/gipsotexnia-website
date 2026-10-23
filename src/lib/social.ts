@@ -1,32 +1,49 @@
-// Reads content/social.json and turns post URLs into embed info.
-// Entries that aren't valid URLs yet (e.g. "TODO-CLIENT: …") become placeholders.
+// Reads content/social.json and turns it into embed info for the social section.
+// - TikTok "featured": individual videos (with thumbnails from `npm run fetch-social`).
+// - TikTok "latest" / Instagram "posts": if empty, the official profile embeds are used,
+//   which always show the account's newest posts (no API keys needed).
+import type { ImageMetadata } from 'astro';
 import data from '../../content/social.json';
+import cache from '../../content/social-cache.json';
+import { social } from '../config/site';
 
-export interface Embed {
-  url: string | null;
-  embed: string | null;
+export interface Video {
+  id: string;
+  url: string;
+  embed: string;
+  thumb: ImageMetadata | null;
+  title: string;
 }
 
-const tiktokId = (u: string) => u.match(/tiktok\.com\/@[^/]+\/video\/(\d{8,})/)?.[1];
-const igCode = (u: string) => u.match(/instagram\.com\/(?:p|reel|tv)\/([\w-]{5,})/)?.[1];
+const thumbs = import.meta.glob<{ default: ImageMetadata }>('../assets/social/*.webp', { eager: true });
+const handle = social.tiktokHandle.replace(/^@/, '');
+const igUser = social.instagram.match(/instagram\.com\/([^/?#]+)/)?.[1] ?? '';
 
-const isPlaceholder = (u: string) => u.startsWith('TODO') || /0{6,}|X{6,}|Y{6,}|Z{6,}/.test(u);
-
-function tiktok(u: string): Embed {
-  const id = !isPlaceholder(u) && tiktokId(u);
-  return id
-    ? { url: u, embed: `https://www.tiktok.com/player/v1/${id}?music_info=0&description=0&rel=0` }
-    : { url: null, embed: null };
+function tiktok(url: string): Video | null {
+  const id = url.match(/tiktok\.com\/@[^/]+\/video\/(\d{8,})/)?.[1];
+  if (!id) return null;
+  return {
+    id,
+    url,
+    embed: `https://www.tiktok.com/player/v1/${id}?music_info=0&description=0&rel=0`,
+    thumb: thumbs[`../assets/social/tiktok-${id}.webp`]?.default ?? null,
+    title: (cache as Record<string, { title: string }>)[id]?.title ?? '',
+  };
 }
 
-function instagram(u: string): Embed {
-  const code = !isPlaceholder(u) && igCode(u);
-  return code ? { url: u, embed: `https://www.instagram.com/p/${code}/embed/` } : { url: null, embed: null };
-}
+const igPost = (url: string) => {
+  const code = url.match(/instagram\.com\/(?:p|reel|tv)\/([\w-]{5,})/)?.[1];
+  return code ? `https://www.instagram.com/p/${code}/embed/` : null;
+};
 
-export const tiktokFeatured = data.tiktok.featured.map(tiktok);
-export const tiktokLatest = data.tiktok.latest.map(tiktok);
-export const instagramPosts = data.instagram.posts.map(instagram);
+export const tiktokFeatured = data.tiktok.featured.map(tiktok).filter((v): v is Video => !!v);
+export const tiktokLatest = (data.tiktok.latest as string[]).map(tiktok).filter((v): v is Video => !!v);
+/** Official TikTok creator embed: profile card + newest videos, always up to date. */
+export const tiktokProfileEmbed = `https://www.tiktok.com/embed/@${handle}`;
 
-/** True when at least one real post is configured (they need cookie consent). */
-export const hasRealEmbeds = [...tiktokFeatured, ...tiktokLatest, ...instagramPosts].some((e) => e.embed);
+export const instagramPosts = (data.instagram.posts as string[]).map(igPost).filter((u): u is string => !!u);
+/** Official Instagram profile embed: newest posts grid, always up to date. */
+export const instagramProfileEmbed = igUser ? `https://www.instagram.com/${igUser}/embed/` : null;
+
+/** Social embeds set third-party cookies, so the consent banner is needed whenever any are shown. */
+export const hasRealEmbeds = tiktokFeatured.length > 0 || tiktokLatest.length > 0 || !!instagramProfileEmbed || instagramPosts.length > 0;
